@@ -68,7 +68,7 @@ class _FavListState extends State<FavList> {
                       IconButton(
                           onPressed: () {
                             deletedata(article.id);
-                            print("object is deleted ${article.id}");
+                           
                             setState(() {});
                           },
                           icon: const Icon(
@@ -95,7 +95,6 @@ class _FavListState extends State<FavList> {
     if (response.statusCode == 200) {
       List<Favlist> detaildata = [];
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
-      print(extractdata);
       extractdata.forEach((key, value) {
         detaildata
             .add(Favlist(book: value['Book'], id: key, price: value['price']));
