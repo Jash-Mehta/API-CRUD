@@ -12,7 +12,6 @@ class Carts extends StatefulWidget {
 
 class _CartsState extends State<Carts> {
   List<Cartlist> _cartlist = [];
-  int cartamount = 0;
 
   @override
   void initState() {
@@ -81,19 +80,17 @@ class _CartsState extends State<Carts> {
                             children: [
                               InkWell(
                                   onTap: () {
-                                    setState(() {
-                                      cartamount++;
-                                    });
+                                    setState(() => _cartlist[index].cartamount++);
                                   },
-                                  child: Icon(Icons.add_circle)),
-                              Text(cartamount.toString()),
+                                  child: const Icon(Icons.add)),
+                              Text(_cartlist[index].cartamount.toString()),
                               InkWell(
                                   onTap: () {
-                                    setState(() {
-                                      cartamount--;
-                                    });
+                                    setState(() => _cartlist[index].cartamount != 0
+                                        ? _cartlist[index].cartamount--
+                                        : _cartlist[index].cartamount);
                                   },
-                                  child: Icon(Icons.remove_circle)),
+                                  child: const Icon(Icons.remove)),
                             ],
                           ),
                         )
@@ -117,7 +114,7 @@ class _CartsState extends State<Carts> {
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
         cartlist.add(Cartlist(
-            id: key, book: value['cartbook'], price: value['cartprice']));
+            id: key, book: value['cartbook'], price: value['cartprice'],cartamount: 1));
       });
       _cartlist = cartlist;
       setState(() {});

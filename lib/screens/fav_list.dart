@@ -97,7 +97,7 @@ class _FavListState extends State<FavList> {
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
         detaildata
-            .add(Favlist(book: value['Book'], id: key, price: value['price']));
+            .add(Favlist(book: value['Book'], id: key, price: value['price'],favclick: 1));
       });
       _iteam = detaildata;
       setState(() {});
