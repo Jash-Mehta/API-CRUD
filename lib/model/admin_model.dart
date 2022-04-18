@@ -3,11 +3,13 @@ class Detail {
   String book;
   String price;
   String author;
+    bool  favclick;
   Detail({
     required this.id,
     required this.book,
     required this.price,
     required this.author,
+     required this.favclick,
   });
 }
 
@@ -15,7 +17,7 @@ class Favlist {
   String book;
   String price;
   var id;
-  int favclick;
+  bool favclick;
   Favlist({
     required this.book,
     required this.price,

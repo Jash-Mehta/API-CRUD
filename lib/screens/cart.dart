@@ -26,81 +26,86 @@ class _CartsState extends State<Carts> {
       appBar: AppBar(
         title: const Text("Cart"),
       ),
-      body: ListView.builder(
-        itemCount: _cartlist.length,
-        itemBuilder: (BuildContext context, int index) {
-          final article = _cartlist[index];
-          return Dismissible(
-            background: const Icon(
-              Icons.delete,
-              color: Colors.black,
-              size: 30,
-            ),
-            key: UniqueKey(),
-            onDismissed: (direction) {
-              deletedata(article.id);
-              setState(() {});
-            },
-            child: Container(
-                height: 130.0,
-                margin:
-                    const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(width: 1.0, color: Colors.black)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      height: 120.0,
-                      width: 100.0,
-                      color: Colors.grey,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Column(
+        children: [
+         Expanded(
+          child: ListView.builder(
+            itemCount: _cartlist.length,
+            itemBuilder: (BuildContext context, int index) {
+              final article = _cartlist[index];
+              return Dismissible(
+                background: const Icon(
+                  Icons.delete,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                key: UniqueKey(),
+                onDismissed: (direction) {
+                  deletedata(article.id);
+                  setState(() {});
+                },
+                child: Container(
+                    height: 130.0,
+                    margin:
+                        const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(width: 1.0, color: Colors.black)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          article.book,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                          ),
+                        Container(
+                          height: 120.0,
+                          width: 100.0,
+                          color: Colors.grey,
                         ),
-                        Text(
-                          "₹ ${article.price}",
-                          style: const TextStyle(
-                            fontSize: 17.0,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25.0,
-                          width: 105.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    setState(() => _cartlist[index].cartamount++);
-                                  },
-                                  child: const Icon(Icons.add)),
-                              Text(_cartlist[index].cartamount.toString()),
-                              InkWell(
-                                  onTap: () {
-                                    setState(() => _cartlist[index].cartamount != 0
-                                        ? _cartlist[index].cartamount--
-                                        : _cartlist[index].cartamount);
-                                  },
-                                  child: const Icon(Icons.remove)),
-                            ],
-                          ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              article.book,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                              ),
+                            ),
+                            Text(
+                              "₹ ${article.price}",
+                              style: const TextStyle(
+                                fontSize: 17.0,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25.0,
+                              width: 105.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                      onTap: () {
+                                        setState(() => _cartlist[index].cartamount++);
+                                      },
+                                      child: const Icon(Icons.add)),
+                                  Text(_cartlist[index].cartamount.toString()),
+                                  InkWell(
+                                      onTap: () {
+                                        setState(() => _cartlist[index].cartamount != 0
+                                            ? _cartlist[index].cartamount--
+                                            : _cartlist[index].cartamount);
+                                      },
+                                      child: const Icon(Icons.remove)),
+                                ],
+                              ),
+                            )
+                          ],
                         )
                       ],
-                    )
-                  ],
-                )),
-          );
-        },
-      ),
+                    )),
+              );
+            },
+          ),
+        ),
+        ]),
     );
   }
 

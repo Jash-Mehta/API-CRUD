@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:apipratice/model/admin_model.dart';
+import 'package:apipratice/screens/fav_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -63,17 +64,17 @@ class _DisplayDataState extends State<DisplayData> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            isFavorite = !isFavorite;
-                            setState(() {});
-
+                            setState(() {
+                              _iteam[index].favclick = !_iteam[index].favclick;
+                            });
                             favdata(article.id, article.book, article.price);
                           },
-                          icon: isFavorite
+                          icon: _iteam[index].favclick
                               ? const Icon(
                                   Icons.favorite,
                                   color: Colors.red,
                                 )
-                              : Icon(Icons.favorite_outline)),
+                              : const Icon(Icons.favorite_outline)),
                       IconButton(
                           onPressed: () {
                             deletedata(article.id);
@@ -108,7 +109,8 @@ class _DisplayDataState extends State<DisplayData> {
             id: key,
             book: value['Book'],
             price: value['Price'],
-            author: value['Author']));
+            author: value['Author'],
+            favclick: value['favdata']));
       });
       _iteam = detaildata;
       setState(() {});

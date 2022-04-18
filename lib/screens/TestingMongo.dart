@@ -16,6 +16,7 @@ class TestingMongoDB extends StatefulWidget {
   State<TestingMongoDB> createState() => _TestingMongoDBState();
 }
 
+
 class _TestingMongoDBState extends State<TestingMongoDB> {
   @override
   void initState() {
@@ -155,7 +156,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail.json'),
-            body: jsonEncode({'Book': book, 'Price': price, 'Author': author}))
+            body: jsonEncode({'Book': book, 'Price': price, 'Author': author,'favdata': false}))
         .whenComplete(() => Navigator.push(
             context, MaterialPageRoute(builder: (_) => DisplayData())));
   }
