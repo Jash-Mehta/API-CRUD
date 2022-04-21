@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/fav_list.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-var book, price, author;
+var book, price, author, image;
 
 class TestingMongoDB extends StatefulWidget {
   const TestingMongoDB({Key? key}) : super(key: key);
@@ -15,7 +14,6 @@ class TestingMongoDB extends StatefulWidget {
   @override
   State<TestingMongoDB> createState() => _TestingMongoDBState();
 }
-
 
 class _TestingMongoDBState extends State<TestingMongoDB> {
   @override
@@ -51,7 +49,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             ListTile(
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => DisplayData()));
+                    context, MaterialPageRoute(builder: (_) => const DisplayData()));
               },
               leading: const Icon(
                 CupertinoIcons.cloud_download,
@@ -66,7 +64,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             InkWell(
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => FavList()));
+                    context, MaterialPageRoute(builder: (_) => const FavList()));
               },
               child: const ListTile(
                 leading: Icon(
@@ -83,7 +81,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             InkWell(
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => Carts()));
+                    context, MaterialPageRoute(builder: (_) => const Carts()));
               },
               child: const ListTile(
                 leading: Icon(
@@ -132,6 +130,16 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 author = value;
               },
             ),
+            TextFormField(
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  hintText: "Image link",
+                  icon: const Icon(Icons.photo)),
+              onChanged: (value) {
+                image = value;
+              },
+            ),
             SizedBox(
               height: 40.0,
               width: 150.0,
@@ -156,8 +164,14 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail.json'),
-            body: jsonEncode({'Book': book, 'Price': price, 'Author': author,'favdata': false}))
+            body: jsonEncode({
+              'Book': book,
+              'Price': price,
+              'Author': author,
+              'favdata': false,
+              'imagelink': image
+            }))
         .whenComplete(() => Navigator.push(
-            context, MaterialPageRoute(builder: (_) => DisplayData())));
+            context, MaterialPageRoute(builder: (_) => const DisplayData())));
   }
 }

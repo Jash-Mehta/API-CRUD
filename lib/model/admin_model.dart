@@ -3,13 +3,15 @@ class Detail {
   String book;
   String price;
   String author;
-    bool  favclick;
+  bool favclick;
+  String imagelink;
   Detail({
     required this.id,
     required this.book,
     required this.price,
     required this.author,
-     required this.favclick,
+    required this.favclick,
+    required this.imagelink,
   });
 }
 

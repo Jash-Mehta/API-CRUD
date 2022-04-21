@@ -13,12 +13,10 @@ class FavList extends StatefulWidget {
 }
 
 bool isFavorite = false;
-Color _iconColor = Colors.grey;
 
 class _FavListState extends State<FavList> {
   @override
   void initState() {
-    // TODO: implement initState
     getdata();
     setState(() {});
     super.initState();
@@ -68,7 +66,7 @@ class _FavListState extends State<FavList> {
                       IconButton(
                           onPressed: () {
                             deletedata(article.id);
-                           
+
                             setState(() {});
                           },
                           icon: const Icon(
@@ -96,8 +94,11 @@ class _FavListState extends State<FavList> {
       List<Favlist> detaildata = [];
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
-        detaildata
-            .add(Favlist(book: value['Book'], id: key, price: value['price'],favclick: false));
+        detaildata.add(Favlist(
+            book: value['Book'],
+            id: key,
+            price: value['price'],
+            favclick: false));
       });
       _iteam = detaildata;
       setState(() {});
@@ -110,7 +111,6 @@ class _FavListState extends State<FavList> {
   Future deletedata(String id) async {
     var client = http.Client();
     final existingproject = _iteam.indexWhere((element) => element.id == id);
-    print(existingproject);
     Favlist? productdetail = _iteam[existingproject];
     _iteam.remove(productdetail);
     var response = client
