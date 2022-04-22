@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:apipratice/screens/TestingMongo.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -48,7 +49,9 @@ class Signup extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () {
-                Auth().signup(email, password);
+                Auth().signup(email, password).whenComplete(() =>
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => TestingMongoDB())));
                 print("auth class is called");
               },
               child: const Text("Signup"))

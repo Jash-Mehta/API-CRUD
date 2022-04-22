@@ -195,7 +195,7 @@ class _DisplayDataState extends State<DisplayData>
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/Cart.json'),
             body: jsonEncode(
-                {'cartid': id, 'cartbook': cartbook, 'cartprice': cartprice}))
+                {'cartid': id, 'cartbook': cartbook, 'cartprice': cartprice,}))
         .whenComplete(() => print("favorites data was added successfully"));
   }
 

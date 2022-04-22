@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:apipratice/model/admin_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +13,7 @@ class Carts extends StatefulWidget {
 
 class _CartsState extends State<Carts> {
   List<Cartlist> _cartlist = [];
-
+  int? qutyamount;
   @override
   void initState() {
     getcartdata();
@@ -26,9 +27,8 @@ class _CartsState extends State<Carts> {
       appBar: AppBar(
         title: const Text("Cart"),
       ),
-      body: Column(
-        children: [
-         Expanded(
+      body: Column(children: [
+        Expanded(
           child: ListView.builder(
             itemCount: _cartlist.length,
             itemBuilder: (BuildContext context, int index) {
@@ -46,8 +46,8 @@ class _CartsState extends State<Carts> {
                 },
                 child: Container(
                     height: 130.0,
-                    margin:
-                        const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                    margin: const EdgeInsets.only(
+                        left: 10.0, right: 10.0, top: 10.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(width: 1.0, color: Colors.black)),
@@ -78,25 +78,38 @@ class _CartsState extends State<Carts> {
                               height: 25.0,
                               width: 105.0,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   InkWell(
                                       onTap: () {
-                                        setState(() => _cartlist[index].cartamount++);
+                                        setState(() {
+                                          _cartlist[index].cartamount++;
+                                          qutyamount =
+                                              _cartlist[index].cartamount;
+                                          cartamount(article.id, qutyamount!);
+                                        });
                                       },
                                       child: const Icon(Icons.add)),
                                   Text(_cartlist[index].cartamount.toString()),
                                   InkWell(
                                       onTap: () {
-                                        setState(() => _cartlist[index].cartamount != 0
-                                            ? _cartlist[index].cartamount--
-                                            : _cartlist[index].cartamount);
+                                        setState(() {
+                                          _cartlist[index].cartamount != 0
+                                              ? _cartlist[index].cartamount--
+                                              : _cartlist[index].cartamount;
+                                          qutyamount =
+                                              _cartlist[index].cartamount;
+                                          cartamount(article.id, qutyamount!);
+                                        });
                                       },
                                       child: const Icon(Icons.remove)),
                                 ],
                               ),
-                            )
+                            ),
+                            //!#--------------------BuyNow Icon(Orderscreen)-------------------#
+                            const Icon(CupertinoIcons.cart_fill)
                           ],
                         )
                       ],
@@ -105,7 +118,7 @@ class _CartsState extends State<Carts> {
             },
           ),
         ),
-        ]),
+      ]),
     );
   }
 
@@ -119,7 +132,10 @@ class _CartsState extends State<Carts> {
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
         cartlist.add(Cartlist(
-            id: key, book: value['cartbook'], price: value['cartprice'],cartamount: 1));
+            id: key,
+            book: value['cartbook'],
+            price: value['cartprice'],
+            cartamount: value['NetQuty']));
       });
       _cartlist = cartlist;
       setState(() {});
@@ -141,5 +157,15 @@ class _CartsState extends State<Carts> {
       }
       productdetail = null;
     }).catchError((_) {});
+  }
+
+//! #---------------------------Update the data to the API[PATCH] in cart Data--------------#
+  Future cartamount(String id, int quty) async {
+    var client = http.Client();
+    var response = await client.patch(
+        Uri.parse(
+          'https://instagram-ee2d1-default-rtdb.firebaseio.com/Cart/$id.json',
+        ),
+        body: jsonEncode({'NetQuty': quty}));
   }
 }
