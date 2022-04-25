@@ -19,7 +19,6 @@ class _DisplayDataState extends State<DisplayData>
     // TODO: implement dispose
     animationController.dispose();
     super.dispose();
-    
   }
 
   @override
@@ -92,7 +91,7 @@ class _DisplayDataState extends State<DisplayData>
                                       updatedata(article.id);
                                     });
                                     favdata(article.id, article.book,
-                                        article.price);
+                                        article.price, article.imagelink);
                                   },
                                   icon: _iteam[index].favclick
                                       ? const Icon(
@@ -110,7 +109,7 @@ class _DisplayDataState extends State<DisplayData>
                               IconButton(
                                   onPressed: () {
                                     cartdata(article.id, article.book,
-                                        article.price);
+                                        article.price, article.imagelink);
                                     setState(() {});
                                   },
                                   icon: const Icon(CupertinoIcons.cart)),
@@ -174,28 +173,40 @@ class _DisplayDataState extends State<DisplayData>
     }).catchError((_) {});
   }
 
-// !#------------- Favorites Data from API RealTime Database(Posting data)------------------#
-  Future favdata(String id, String favname, String price) async {
+// !#------------- Favorites Data from API RealTime Database(Posting data) Fav.------------------#
+  Future favdata(
+      String id, String favname, String price, String imageurl) async {
     var client = http.Client();
     final favdetail = _iteam.indexWhere((element) => element.id == id);
     var response = client
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/favorites.json'),
-            body: jsonEncode({'favid': id, 'Book': favname, 'price': price}))
+            body: jsonEncode({
+              'favid': id,
+              'Book': favname,
+              'price': price,
+              'imageUrl': imageurl
+            }))
         .whenComplete(() => print("favorites data was added successfully"));
   }
 
 //! #-----------------------Sending Data to Cart Database(API)---------------------#
-  Future cartdata(String id, String cartbook, String cartprice) async {
+  Future cartdata(
+      String id, String cartbook, String cartprice, String imageurl) async {
     var client = http.Client();
     final favdetail = _iteam.indexWhere((element) => element.id == id);
     var response = await client
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/Cart.json'),
-            body: jsonEncode(
-                {'cartid': id, 'cartbook': cartbook, 'cartprice': cartprice,}))
+            body: jsonEncode({
+              'cartid': id,
+              'cartbook': cartbook,
+              'cartprice': cartprice,
+              'imageUrl': imageurl,
+              'NetQuty': 1
+            }))
         .whenComplete(() => print("favorites data was added successfully"));
   }
 

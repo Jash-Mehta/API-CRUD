@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/fav_list.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +24,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   }
 
   List data = [];
+  File? file;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +51,8 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             ),
             ListTile(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const DisplayData()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const DisplayData()));
               },
               leading: const Icon(
                 CupertinoIcons.cloud_download,
@@ -63,8 +66,8 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const FavList()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const FavList()));
               },
               child: const ListTile(
                 leading: Icon(
@@ -140,6 +143,21 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 image = value;
               },
             ),
+            ListTile(
+              leading: IconButton(
+                  onPressed: () {
+                    selectfile();
+                  },
+                  icon: const Icon(
+                    Icons.picture_as_pdf,
+                    size: 35.0,
+                    color: Colors.black45,
+                  )),
+              title: const Text(
+                "SELECT PDF",
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ),
             SizedBox(
               height: 40.0,
               width: 150.0,
@@ -173,5 +191,14 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             }))
         .whenComplete(() => Navigator.push(
             context, MaterialPageRoute(builder: (_) => const DisplayData())));
+  }
+
+  Future selectfile() async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    if (result == null) return;
+    var path = result.files.single.path!;
+    setState(() {
+      file = File(path);
+    });
   }
 }

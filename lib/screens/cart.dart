@@ -33,6 +33,8 @@ class _CartsState extends State<Carts> {
             itemCount: _cartlist.length,
             itemBuilder: (BuildContext context, int index) {
               final article = _cartlist[index];
+              var a = int.parse(article.price);
+
               return Dismissible(
                 background: const Icon(
                   Icons.delete,
@@ -57,7 +59,10 @@ class _CartsState extends State<Carts> {
                         Container(
                           height: 120.0,
                           width: 100.0,
-                          color: Colors.grey,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(article.imageurl),
+                                  fit: BoxFit.fitWidth)),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,8 +76,7 @@ class _CartsState extends State<Carts> {
                             Text(
                               "₹ ${article.price}",
                               style: const TextStyle(
-                                fontSize: 17.0,
-                              ),
+                                  fontSize: 18.0, color: Colors.black),
                             ),
                             SizedBox(
                               height: 25.0,
@@ -92,7 +96,13 @@ class _CartsState extends State<Carts> {
                                         });
                                       },
                                       child: const Icon(Icons.add)),
-                                  Text(_cartlist[index].cartamount.toString()),
+                                  Text(
+                                    _cartlist[index].cartamount.toString(),
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                   InkWell(
                                       onTap: () {
                                         setState(() {
@@ -109,7 +119,13 @@ class _CartsState extends State<Carts> {
                               ),
                             ),
                             //!#--------------------BuyNow Icon(Orderscreen)-------------------#
-                            const Icon(CupertinoIcons.cart_fill)
+                            Text(
+                              "SubTotal: ₹${a * article.cartamount}",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ],
                         )
                       ],
@@ -118,6 +134,24 @@ class _CartsState extends State<Carts> {
             },
           ),
         ),
+        SizedBox(
+            width: double.infinity,
+            height: 58.0,
+            child: ElevatedButton(
+                onPressed: () {},
+                child: ListTile(
+                  title: const Text(
+                    "ORDER NOW",
+                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  ),
+                  trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.arrow_right_alt_rounded,
+                        color: Colors.white,
+                        size: 28.0,
+                      )),
+                )))
       ]),
     );
   }
@@ -135,7 +169,8 @@ class _CartsState extends State<Carts> {
             id: key,
             book: value['cartbook'],
             price: value['cartprice'],
-            cartamount: value['NetQuty']));
+            cartamount: value['NetQuty'],
+            imageurl: value['imageUrl']));
       });
       _cartlist = cartlist;
       setState(() {});

@@ -20,11 +20,13 @@ class Favlist {
   String price;
   var id;
   bool favclick;
+  String imagelink;
   Favlist({
     required this.book,
     required this.price,
     required this.id,
     required this.favclick,
+    required this.imagelink,
   });
 }
 
@@ -33,12 +35,12 @@ class Cartlist {
   String book;
   String price;
   int cartamount;
+  String imageurl;
   Cartlist({
     required this.id,
     required this.book,
     required this.price,
     required this.cartamount,
+    required this.imageurl,
   });
 }
-
-

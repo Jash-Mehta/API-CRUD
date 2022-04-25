@@ -47,9 +47,13 @@ class _FavListState extends State<FavList> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const CircleAvatar(
-                    radius: 35.0,
-                    backgroundColor: Colors.grey,
+                  Container(
+                    height: 80.0,
+                    width: 85.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(article.imagelink),
+                            fit: BoxFit.fitWidth)),
                   ),
                   const Spacer(),
                   Text(
@@ -97,6 +101,7 @@ class _FavListState extends State<FavList> {
         detaildata.add(Favlist(
             book: value['Book'],
             id: key,
+            imagelink: value['imageUrl'],
             price: value['price'],
             favclick: false));
       });
