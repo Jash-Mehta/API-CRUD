@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:apipratice/model/admin_model.dart';
 import 'package:apipratice/screens/TestingMongo.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 var password, email;
+String? localuid;
 
 class Signup extends StatelessWidget {
   const Signup({Key? key}) : super(key: key);
@@ -63,7 +65,7 @@ class Signup extends StatelessWidget {
 
 //! #--------------------------Firebase SIGNUP Authencation API----------------#
 class Auth with ChangeNotifier {
-  Future<void> signup(String email, String password) async {
+  Future signup(String email, String password) async {
     var client = Client();
     var response = await client.post(
         /**
@@ -76,6 +78,10 @@ class Auth with ChangeNotifier {
         body: jsonEncode(
           {'email': email, 'password': password, 'returnSecureToken': true},
         ));
-    print(response.body);
+    if (response.statusCode == 200) {
+      final extractdata = jsonDecode(response.body);
+      localuid = extractdata['localId'];
+      print(localuid);
+    }
   }
 }

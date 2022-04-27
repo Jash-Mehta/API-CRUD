@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/fav_list.dart';
+import 'package:apipratice/widget/drawer.dart';
+import 'package:apipratice/widget/text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,150 +30,137 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text("Testing MongoDB"),
+          title: const Text(
+            "Dashboard",
+            style: TextStyle(color: Colors.black, fontSize: 20.0),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          leading: Builder(builder: (context) {
+            return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: const Icon(
+                  Icons.clear_all,
+                  color: Colors.black,
+                ));
+          }),
+          actions: const [
+            Icon(
+              Icons.book_online_outlined,
+              color: Colors.black,
+            )
+          ],
+          elevation: 0,
         ),
-        drawer: Drawer(
-            child: Column(
-          children: [
-            const DrawerHeader(
-                child: CircleAvatar(
-              radius: 60,
-            )),
-            const ListTile(
-              leading: Icon(
-                CupertinoIcons.cloud_upload,
-                size: 30,
-                color: Colors.blue,
+        drawer: const DashDrawer(),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      "Books Publish",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    height: 110.0,
+                    width: 80.0,
+                    margin: const EdgeInsets.only(right: 20.0),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: const AssetImage('assets/Mobilelife.png'),
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(1.0),
+                                BlendMode.dstATop),
+                            fit: BoxFit.cover)),
+                  ),
+                ],
               ),
-              title: Text(
-                "Posting Data",
-                style: TextStyle(fontSize: 20.0),
+              DetailScreen(
+                hinttext: "Book Name",
+                icon: Icon(Icons.book),
+                onchange: (value) {
+                  book = value;
+                },
               ),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const DisplayData()));
-              },
-              leading: const Icon(
-                CupertinoIcons.cloud_download,
-                size: 30,
-                color: Colors.blue,
+              const SizedBox(
+                height: 25.0,
               ),
-              title: const Text(
-                "Fetching Data",
-                style: TextStyle(fontSize: 20.0),
+              DetailScreen(
+                hinttext: "Price",
+                icon: Icon(CupertinoIcons.money_dollar),
+                onchange: (value) {
+                  price = value;
+                },
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const FavList()));
-              },
-              child: const ListTile(
-                leading: Icon(
-                  CupertinoIcons.heart,
-                  size: 30,
-                  color: Colors.blue,
+              const SizedBox(
+                height: 25.0,
+              ),
+              DetailScreen(
+                hinttext: "Author Name",
+                icon: Icon(Icons.person),
+                onchange: (value) {
+                  author = value;
+                },
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              DetailScreen(
+                hinttext: "Image link",
+                icon: Icon(Icons.photo),
+                onchange: (value) {
+                  image = value;
+                },
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              ListTile(
+                leading: IconButton(
+                    onPressed: () {
+                      selectfile();
+                    },
+                    icon: const Icon(
+                      Icons.picture_as_pdf,
+                      size: 35.0,
+                      color: Colors.black45,
+                    )),
+                title: const Text(
+                  "SELECT PDF",
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
-                title: Text(
-                  "Favorite List",
-                  style: TextStyle(fontSize: 20.0),
-                ),
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const Carts()));
-              },
-              child: const ListTile(
-                leading: Icon(
-                  CupertinoIcons.cart,
-                  size: 30,
-                  color: Colors.blue,
-                ),
-                title: Text(
-                  "Cart",
-                  style: TextStyle(fontSize: 20.0),
-                ),
+              const SizedBox(
+                height: 25.0,
               ),
-            ),
-          ],
-        )),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextFormField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  hintText: "Book Name",
-                  icon: const Icon(Icons.book)),
-              onChanged: (value) {
-                book = value;
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  hintText: "Price",
-                  icon: const Icon(CupertinoIcons.money_dollar)),
-              onChanged: (value) {
-                price = value;
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  hintText: "Author Name",
-                  icon: const Icon(Icons.person)),
-              onChanged: (value) {
-                author = value;
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  hintText: "Image link",
-                  icon: const Icon(Icons.photo)),
-              onChanged: (value) {
-                image = value;
-              },
-            ),
-            ListTile(
-              leading: IconButton(
-                  onPressed: () {
-                    selectfile();
-                  },
-                  icon: const Icon(
-                    Icons.picture_as_pdf,
-                    size: 35.0,
-                    color: Colors.black45,
-                  )),
-              title: const Text(
-                "SELECT PDF",
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              SizedBox(
+                height: 40.0,
+                width: 150.0,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(onPrimary: Colors.blue),
+                    onPressed: () {
+                      postdata();
+                    },
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white),
+                    )),
               ),
-            ),
-            SizedBox(
-              height: 40.0,
-              width: 150.0,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(onPrimary: Colors.blue[900]),
-                  onPressed: () {
-                    postdata();
-                  },
-                  child: const Text(
-                    "Submit",
-                    style: TextStyle(color: Colors.white),
-                  )),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 

@@ -44,3 +44,10 @@ class Cartlist {
     required this.imageurl,
   });
 }
+
+class Authentication {
+  String refreshtoken;
+  Authentication({
+    required this.refreshtoken,
+  });
+}
