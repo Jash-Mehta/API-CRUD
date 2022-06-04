@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:apipratice/model/admin_model.dart';
+import 'package:apipratice/screens/TestingMongo.dart';
+import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/screens/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +131,7 @@ class _DisplayDataState extends State<DisplayData>
                                     blurRadius: 4.0,
                                   ),
                                 ],
-                                border: Border.all(color: Colors.black)),
+                                border: Border.all(color: Colors.blue)),
                             child: Column(children: [
                               const SizedBox(
                                 height: 5.0,
@@ -241,15 +243,16 @@ class _DisplayDataState extends State<DisplayData>
       List<Detail> detaildata = [];
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
-        detaildata.add(
-          Detail(
+        var spefics = value as Map<String, dynamic>;
+        spefics.forEach((key, value) {
+          detaildata.add(Detail(
               id: key,
               book: value['Book'],
               price: value['Price'],
               author: value['Author'],
               favclick: value['favdata'],
-              imagelink: value['imagelink']),
-        );
+              imagelink: value['imagelink']));
+        });
       });
       _iteam = detaildata;
       return extractdata;
@@ -309,7 +312,7 @@ class _DisplayDataState extends State<DisplayData>
               'imageUrl': imageurl,
               'NetQuty': 1
             }))
-        .whenComplete(() => print("favorites data was added successfully"));
+        .whenComplete(() => print("Cart data was added successfully"));
   }
 
   //! #-----------------------Updating data to Detail(favdata)[PATCH]-------------#

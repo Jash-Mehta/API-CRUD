@@ -8,6 +8,7 @@ class DetailScreen extends StatefulWidget {
   TextInputType? keyboardType;
   TextInputAction? inputAction;
   Icon? icon;
+  String? predefine;
 
   DetailScreen({
     Key? key,
@@ -18,6 +19,7 @@ class DetailScreen extends StatefulWidget {
     this.keyboardType,
     this.inputAction,
     this.icon,
+    this.predefine,
   }) : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 13.0, right: 13.0, top: 10.0),
       child: TextFormField(
+        initialValue: widget.predefine,
         decoration: InputDecoration(
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),

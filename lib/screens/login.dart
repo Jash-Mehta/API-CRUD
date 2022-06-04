@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:apipratice/model/admin_model.dart';
 import 'package:apipratice/screens/TestingMongo.dart';
-import 'package:apipratice/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 var password, email;
+String? localuid;
 
-class Signup extends StatelessWidget {
-  const Signup({Key? key}) : super(key: key);
+class Login extends StatelessWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +37,6 @@ class Signup extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.0)),
                 hintText: "Password",
                 icon: const Icon(Icons.lock)),
-            onChanged: (value) {},
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
-                hintText: "ConfirmPassword",
-                icon: const Icon(Icons.lock)),
             onChanged: (value) {
               password = value;
             },
@@ -53,30 +45,30 @@ class Signup extends StatelessWidget {
               onPressed: () {
                 Auth().signup(email, password).whenComplete(() =>
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => Login())));
+                        MaterialPageRoute(builder: (_) => TestingMongoDB())));
                 print("auth class is called");
               },
-              child: const Text("Signup"))
+              child: const Text("Login"))
         ],
       ),
     );
   }
 }
 
-//! #--------------------------Firebase SIGNUP Authencation API----------------#
+//! #--------------------------Firebase LOGIN Authencation API----------------#
 class Auth with ChangeNotifier {
   Future signup(String email, String password) async {
     var client = Client();
     var response = await client.post(
-        /**
-       * ! Same Method is apply to acheive Signin/Login......
-       * ! Only Difference is that you have to change post link..........  
-        */
         Uri.parse(
-            // ! below link will change in Login Part..........
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDzQ0-lfmteC3wmd-nzDYL6lcfxCZa_4K0'),
+            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDzQ0-lfmteC3wmd-nzDYL6lcfxCZa_4K0'),
         body: jsonEncode(
           {'email': email, 'password': password, 'returnSecureToken': true},
         ));
+    if (response.statusCode == 200) {
+      final extractdata = jsonDecode(response.body);
+      localuid = extractdata['localId'];
+      print(localuid);
+    }
   }
 }

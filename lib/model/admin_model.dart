@@ -44,6 +44,18 @@ class Cartlist {
     required this.imageurl,
   });
 }
+class YourBook {
+  var id;
+  String book;
+  String price;
+  String imageurl;
+  YourBook({
+    required this.id,
+    required this.book,
+    required this.price,
+    required this.imageurl,
+  });
+}
 
 class Authentication {
   String refreshtoken;

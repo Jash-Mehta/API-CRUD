@@ -1,4 +1,5 @@
 import 'package:apipratice/screens/TestingMongo.dart';
+import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
           primarySwatch: Colors.blue,
-          iconTheme: IconThemeData(color: Colors.blue),
-          primaryIconTheme: IconThemeData(color: Colors.black)),
+          iconTheme: const IconThemeData(color: Colors.blue),
+          primaryIconTheme: const IconThemeData(color: Colors.black)),
       debugShowCheckedModeBanner: false,
-      home: const Signup(),
+      home: const Login(),
     );
   }
 }

@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/fav_list.dart';
+import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/widget/drawer.dart';
 import 'package:apipratice/widget/text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
-var book, price, author, image;
+var book, price, author, image, uid;
 
 class TestingMongoDB extends StatefulWidget {
   const TestingMongoDB({Key? key}) : super(key: key);
@@ -23,6 +25,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   @override
   void initState() {
     super.initState();
+    uid = Uuid().v1();
   }
 
   List data = [];
@@ -153,6 +156,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                     style: ElevatedButton.styleFrom(onPrimary: Colors.blue),
                     onPressed: () {
                       postdata();
+                      yourbookfile();
                     },
                     child: const Text(
                       "Submit",
@@ -170,7 +174,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
     var response = client
         .post(
             Uri.parse(
-                'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail.json'),
+                'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$uid.json'),
             body: jsonEncode({
               'Book': book,
               'Price': price,
@@ -182,6 +186,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
             context, MaterialPageRoute(builder: (_) => const DisplayData())));
   }
 
+// ! #----------------Selecting files from the devices---------------#
   Future selectfile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result == null) return;
@@ -189,5 +194,17 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
     setState(() {
       file = File(path);
     });
+  }
+
+  // ! #-----------------------Sending data to the Yourbook Screen-----------#
+  Future yourbookfile() async {
+    var client = http.Client();
+
+    var response = client.post(
+        Uri.parse(
+            'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/yourbook.json'),
+        body: jsonEncode({
+          'useruid': uid,
+        }));
   }
 }
