@@ -188,14 +188,6 @@ class _DisplayDataState extends State<DisplayData>
                                           : const Icon(Icons.favorite_outline)),
                                   IconButton(
                                       onPressed: () {
-                                        deletedata(article.id);
-                                        print(
-                                            "object is deleted ${article.id}");
-                                        setState(() {});
-                                      },
-                                      icon: const Icon(Icons.delete_outline)),
-                                  IconButton(
-                                      onPressed: () {
                                         cartdata(article.id, article.book,
                                             article.price, article.imagelink);
                                         setState(() {});
@@ -259,23 +251,6 @@ class _DisplayDataState extends State<DisplayData>
     } else {
       throw Exception('Failed to load data');
     }
-  }
-
-//!  #-----------------Deleting Data from API RealTime database--------------#
-  Future deletedata(String id) async {
-    var client = http.Client();
-    final existingproject = _iteam.indexWhere((element) => element.id == id);
-    Detail? productdetail = _iteam[existingproject];
-    _iteam.remove(productdetail);
-    var response = client
-        .delete(Uri.parse(
-            'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id.json'))
-        .then((value) {
-      if (value.statusCode >= 400) {
-        throw Exception();
-      }
-      productdetail = null;
-    }).catchError((_) {});
   }
 
 // !#------------- Favorites Data from API RealTime Database(Posting data) Fav.------------------#

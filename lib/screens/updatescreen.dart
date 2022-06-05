@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -145,15 +146,18 @@ class _UpdateBookState extends State<UpdateBook> {
           var extract_detail_data =
               jsonDecode(detailresponse.body) as Map<String, dynamic>;
           extract_detail_data.forEach((key, value) async {
-            var response = await client.patch(
-                Uri.parse(
-                    'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id/$key.json'),
-                body: jsonEncode({
-                  'Book': change_name ? updatename : widget.name,
-                  'Price': change_price ? updateprice : widget.price,
-                  'imagelink':
-                      change_imageurl ? updateimagelink : widget.imageurl,
-                }));
+            var response = await client
+                .patch(
+                    Uri.parse(
+                        'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id/$key.json'),
+                    body: jsonEncode({
+                      'Book': change_name ? updatename : widget.name,
+                      'Price': change_price ? updateprice : widget.price,
+                      'imagelink':
+                          change_imageurl ? updateimagelink : widget.imageurl,
+                    }))
+                .whenComplete(() => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => const DisplayData())));
           });
         });
       });
