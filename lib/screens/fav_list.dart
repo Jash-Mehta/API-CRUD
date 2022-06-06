@@ -126,7 +126,7 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
                                   children: [
                                     IconButton(
                                         onPressed: () {
-                                          deletedata(article.id);
+                                          deleteyourbook(article.id);
 
                                           setState(() {});
                                         },
@@ -176,20 +176,33 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
     var client = http.Client();
     var response = await client.get(Uri.parse(
         'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites.json'));
-
     if (response.statusCode == 200) {
       List<Favlist> detaildata = [];
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
-
       extractdata.forEach((key, value) {
-        detaildata.add(Favlist(
-            book: value['Book'],
-            id: key,
-            imagelink: value['imageUrl'],
-            price: value['price'],
-            favclick: false));
+        var useruid = value as Map<String, dynamic>;
+        useruid.forEach((keys, values) async {
+          var detailresponse = await client.get(Uri.parse(
+              'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$values.json'));
+          var extract_detail_data =
+              jsonDecode(detailresponse.body) as Map<String, dynamic>;
+          extract_detail_data.forEach((key, value) {
+            print("your Keys,Values,Value is printing below");
+            print(key);
+            print(value);
+            print(keys);
+            print(values);
+            detaildata.add(Favlist(
+                id: key,
+                book: value['Book'],
+                price: value['Price'],
+                imagelink: value['imagelink'],
+                favclick: value['favdata']));
+          });
+          _iteam = detaildata;
+        });
       });
-      _iteam = detaildata;
+
       return extractdata;
     } else {
       throw Exception('Failed to load data');
@@ -197,19 +210,32 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
   }
 
   // !#------------- Deleting Favorites Data from API RealTime Database(Posting data)------------------#
-  Future deletedata(String id) async {
+
+  Future deleteyourbook(String id) async {
     var client = http.Client();
-    final existingproject = _iteam.indexWhere((element) => element.id == id);
-    Favlist? productdetail = _iteam[existingproject];
-    _iteam.remove(productdetail);
-    var response = client
-        .delete(Uri.parse(
-            'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites/$id.json'))
-        .then((value) {
-      if (value.statusCode >= 400) {
-        throw Exception();
-      }
-      productdetail = null;
-    }).catchError((_) {});
+    final favdetail = _iteam.indexWhere((element) => element.id == id);
+    Favlist? yourbook = _iteam[favdetail];
+    _iteam.remove(yourbook);
+    var response = await client.get(Uri.parse(
+        'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites.json'));
+    if (response.statusCode == 200) {
+      var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
+      extractdata.forEach((keys, value) {
+        var useruid = value as Map<String, dynamic>;
+        useruid.forEach((key, values) async {
+          print('Here delete book iss printingggggg below');
+          var deleteid = values;
+          var deleteresponse = await client
+              .delete(Uri.parse(
+                  'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites/$deleteid.json'))
+              .then((value) {
+            if (value.statusCode >= 400) {
+              throw Exception();
+            }
+            yourbook = null;
+          });
+        });
+      });
+    }
   }
 }

@@ -234,11 +234,11 @@ class _DisplayDataState extends State<DisplayData>
     if (response.statusCode == 200) {
       List<Detail> detaildata = [];
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
-      extractdata.forEach((key, value) {
+      extractdata.forEach((keys, value) {
         var spefics = value as Map<String, dynamic>;
         spefics.forEach((key, value) {
           detaildata.add(Detail(
-              id: key,
+              id: keys,
               book: value['Book'],
               price: value['Price'],
               author: value['Author'],
@@ -262,12 +262,7 @@ class _DisplayDataState extends State<DisplayData>
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites.json'),
-            body: jsonEncode({
-              'favid': id,
-              'Book': favname,
-              'price': price,
-              'imageUrl': imageurl
-            }))
+            body: jsonEncode({"favbookuid": id}))
         .whenComplete(() => print("favorites data was added successfully"));
   }
 
@@ -293,9 +288,20 @@ class _DisplayDataState extends State<DisplayData>
   //! #-----------------------Updating data to Detail(favdata)[PATCH]-------------#
   Future updatedata(String id) async {
     var client = http.Client();
-    var response = await client.patch(
-        Uri.parse(
-            'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id.json'),
-        body: jsonEncode({'favdata': isFavorite}));
+    var response = await client.get(
+      Uri.parse(
+          'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id.json'),
+    );
+    if (response.statusCode == 200) {
+      var extract_data = jsonDecode(response.body) as Map<String, dynamic>;
+      extract_data.forEach((key, value) async {
+        var fav_response = await client.patch(
+            Uri.parse(
+                'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id/$key.json'),
+            body: jsonEncode({
+              'favdata': true,
+            }));
+      });
+    }
   }
 }

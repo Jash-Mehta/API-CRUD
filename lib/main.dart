@@ -1,6 +1,4 @@
-import 'package:apipratice/screens/TestingMongo.dart';
 import 'package:apipratice/screens/login.dart';
-import 'package:apipratice/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
