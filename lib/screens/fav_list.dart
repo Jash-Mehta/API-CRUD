@@ -127,7 +127,7 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
                                     IconButton(
                                         onPressed: () {
                                           deleteyourbook(article.id);
-
+                                          updatebook(article.id);
                                           setState(() {});
                                         },
                                         icon: const Icon(
@@ -187,13 +187,8 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
           var extract_detail_data =
               jsonDecode(detailresponse.body) as Map<String, dynamic>;
           extract_detail_data.forEach((key, value) {
-            print("your Keys,Values,Value is printing below");
-            print(key);
-            print(value);
-            print(keys);
-            print(values);
             detaildata.add(Favlist(
-                id: key,
+                id: values,
                 book: value['Book'],
                 price: value['Price'],
                 imagelink: value['imagelink'],
@@ -223,18 +218,39 @@ class _FavListState extends State<FavList> with TickerProviderStateMixin {
       extractdata.forEach((keys, value) {
         var useruid = value as Map<String, dynamic>;
         useruid.forEach((key, values) async {
-          print('Here delete book iss printingggggg below');
-          var deleteid = values;
-          var deleteresponse = await client
-              .delete(Uri.parse(
-                  'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites/$deleteid.json'))
-              .then((value) {
-            if (value.statusCode >= 400) {
-              throw Exception();
-            }
-            yourbook = null;
-          });
+          if (id == values) {
+            var deleteid = keys;
+            var deleteresponse = await client
+                .delete(Uri.parse(
+                    'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites/$deleteid.json'))
+                .then((value) {
+              if (value.statusCode >= 400) {
+                throw Exception();
+              }
+              yourbook = null;
+            });
+          }
         });
+      });
+    }
+  }
+
+  //! #------------------------Update the fav. Bool in detail screen------------------#
+  Future updatebook(String id) async {
+    var client = http.Client();
+    final favupdate = _iteam.indexWhere((element) => element.id == id);
+    var response = await client.get(Uri.parse(
+        'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id.json'));
+    if (response.statusCode == 200) {
+      var etractdata = jsonDecode(response.body) as Map<String, dynamic>;
+      etractdata.forEach((key, value) async {
+        var boolvalue = key;
+        var updatebool = await client.patch(
+            Uri.parse(
+                'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$id/$boolvalue.json'),
+            body: jsonEncode({
+              'favdata': false,
+            }));
       });
     }
   }

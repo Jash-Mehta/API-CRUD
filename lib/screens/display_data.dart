@@ -262,7 +262,7 @@ class _DisplayDataState extends State<DisplayData>
         .post(
             Uri.parse(
                 'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/favorites.json'),
-            body: jsonEncode({"favbookuid": id}))
+            body: jsonEncode({"useruid": id}))
         .whenComplete(() => print("favorites data was added successfully"));
   }
 
