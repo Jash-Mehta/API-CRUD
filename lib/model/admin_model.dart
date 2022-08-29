@@ -5,6 +5,7 @@ class Detail {
   String author;
   bool favclick;
   String imagelink;
+  String pdfurl;
   Detail({
     required this.id,
     required this.book,
@@ -12,6 +13,7 @@ class Detail {
     required this.author,
     required this.favclick,
     required this.imagelink,
+    required this.pdfurl,
   });
 }
 
@@ -44,6 +46,7 @@ class Cartlist {
     required this.imageurl,
   });
 }
+
 class YourBook {
   var id;
   String book;

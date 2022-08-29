@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:apipratice/model/admin_model.dart';
 import 'package:apipratice/screens/TestingMongo.dart';
 import 'package:apipratice/screens/login.dart';
+import 'package:apipratice/screens/readbook.dart';
 import 'package:apipratice/screens/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -118,84 +119,101 @@ class _DisplayDataState extends State<DisplayData>
                       itemCount: _iteam.length,
                       itemBuilder: (BuildContext ctx, index) {
                         var article = _iteam[index];
-                        return Container(
-                            margin: const EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 1.0), //(x,y)
-                                    blurRadius: 4.0,
-                                  ),
-                                ],
-                                border: Border.all(color: Colors.blue)),
-                            child: Column(children: [
-                              const SizedBox(
-                                height: 5.0,
-                              ),
-                              Container(
-                                height: 75.0,
-                                width: 120.0,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(article.imagelink),
-                                        fit: BoxFit.cover)),
-                              ),
-                              const Spacer(),
-                              Text(
-                                article.book,
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 20.0),
-                              ),
-                              Row(
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => Readbook(
+                                          author: article.author,
+                                          bookname: article.book,
+                                          price: article.price,
+                                          imageurl: article.imagelink,
+                                          pdfurl: article.pdfurl,
+                                        )));
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 8.0, right: 8.0, top: 8.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 4.0,
+                                    ),
+                                  ],
+                                  border: Border.all(color: Colors.blue)),
+                              child: Column(children: [
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  height: 75.0,
+                                  width: 120.0,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image:
+                                              NetworkImage(article.imagelink),
+                                          fit: BoxFit.cover)),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  article.book,
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 20.0),
+                                ),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "₹ ${article.price}",
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17.0),
+                                      ),
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.yellow[800],
+                                      ),
+                                      Text('4.0')
+                                    ]),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text(
-                                      "₹ ${article.price}",
-                                      style: const TextStyle(
-                                          color: Colors.black, fontSize: 17.0),
-                                    ),
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.yellow[800],
-                                    ),
-                                    Text('4.0')
-                                  ]),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _iteam[index].favclick =
-                                              !_iteam[index].favclick;
-                                          isFavorite = _iteam[index].favclick;
-                                          updatedata(article.id);
-                                        });
-                                        favdata(article.id, article.book,
-                                            article.price, article.imagelink);
-                                      },
-                                      icon: _iteam[index].favclick
-                                          ? const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                            )
-                                          : const Icon(Icons.favorite_outline)),
-                                  IconButton(
-                                      onPressed: () {
-                                        cartdata(article.id, article.book,
-                                            article.price, article.imagelink);
-                                        setState(() {});
-                                      },
-                                      icon: const Icon(CupertinoIcons.cart)),
-                                ],
-                              )
-                            ]));
+                                    IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _iteam[index].favclick =
+                                                !_iteam[index].favclick;
+                                            isFavorite = _iteam[index].favclick;
+                                            updatedata(article.id);
+                                          });
+                                          favdata(article.id, article.book,
+                                              article.price, article.imagelink);
+                                        },
+                                        icon: _iteam[index].favclick
+                                            ? const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(
+                                                Icons.favorite_outline)),
+                                    IconButton(
+                                        onPressed: () {
+                                          cartdata(article.id, article.book,
+                                              article.price, article.imagelink);
+                                          setState(() {});
+                                        },
+                                        icon: const Icon(CupertinoIcons.cart)),
+                                  ],
+                                )
+                              ])),
+                        );
                       }),
                 ),
               ]);
@@ -243,7 +261,8 @@ class _DisplayDataState extends State<DisplayData>
               price: value['Price'],
               author: value['Author'],
               favclick: value['favdata'],
-              imagelink: value['imagelink']));
+              imagelink: value['imagelink'],
+              pdfurl: value['pdfUrl']));
         });
       });
       _iteam = detaildata;

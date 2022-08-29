@@ -156,8 +156,8 @@ class _UpdateBookState extends State<UpdateBook> {
                       'imagelink':
                           change_imageurl ? updateimagelink : widget.imageurl,
                     }))
-                .whenComplete(() => Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const DisplayData())));
+                .whenComplete(() => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const DisplayData())));
           });
         });
       });

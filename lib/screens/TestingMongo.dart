@@ -1,18 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/display_data.dart';
-import 'package:apipratice/screens/fav_list.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/widget/drawer.dart';
 import 'package:apipratice/widget/text_field.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
+import '../model/firebaseapi.dart';
+
 var book, price, author, image, uid;
+var filename;
 
 class TestingMongoDB extends StatefulWidget {
   const TestingMongoDB({Key? key}) : super(key: key);
@@ -29,7 +31,10 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   }
 
   List data = [];
+  bool circularindicator = false;
   File? file;
+  UploadTask? task;
+  var urlDownload;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +98,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
               ),
               DetailScreen(
                 hinttext: "Book Name",
-                icon: Icon(Icons.book),
+                icon: const Icon(Icons.book),
                 onchange: (value) {
                   book = value;
                 },
@@ -103,7 +108,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
               ),
               DetailScreen(
                 hinttext: "Price",
-                icon: Icon(CupertinoIcons.money_dollar),
+                icon: const Icon(CupertinoIcons.money_dollar),
                 onchange: (value) {
                   price = value;
                 },
@@ -113,7 +118,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
               ),
               DetailScreen(
                 hinttext: "Author Name",
-                icon: Icon(Icons.person),
+                icon: const Icon(Icons.person),
                 onchange: (value) {
                   author = value;
                 },
@@ -123,7 +128,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
               ),
               DetailScreen(
                 hinttext: "Image link",
-                icon: Icon(Icons.photo),
+                icon: const Icon(Icons.photo),
                 onchange: (value) {
                   image = value;
                 },
@@ -155,8 +160,14 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(onPrimary: Colors.blue),
                     onPressed: () {
+                      // setState(() {
+                      //   circularindicator = true;
+                      //   circularindicator ? CircularProgressIndicator()""
+                      // });
                       postdata();
                       yourbookfile();
+
+                      uploadPDFfiles();
                     },
                     child: const Text(
                       "Submit",
@@ -171,24 +182,27 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
 // !  #----------------Posting Data in API-----------------#
   Future postdata() async {
     var client = http.Client();
-    var response = client
-        .post(
-            Uri.parse(
-                'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$uid.json'),
-            body: jsonEncode({
-              'Book': book,
-              'Price': price,
-              'Author': author,
-              'favdata': false,
-              'imagelink': image
-            }))
-        .whenComplete(() => Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const DisplayData())));
+    print("Your download url is heree");
+    print(urlDownload);
+    var response = await client.post(
+        Uri.parse(
+            'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$uid.json'),
+        body: jsonEncode({
+          'Book': book,
+          'Price': price,
+          'Author': author,
+          'favdata': false,
+          'imagelink': image,
+          'pdfUrl': urlDownload,
+        }));
   }
 
 // ! #----------------Selecting files from the devices---------------#
   Future selectfile() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        allowedExtensions: ['pdf'],
+        type: FileType.custom);
     if (result == null) return;
     var path = result.files.single.path!;
     setState(() {
@@ -199,12 +213,26 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   // ! #-----------------------Sending data to the Yourbook Screen-----------#
   Future yourbookfile() async {
     var client = http.Client();
-
     var response = client.post(
         Uri.parse(
             'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/yourbook.json'),
         body: jsonEncode({
           'useruid': uid,
         }));
+  }
+
+  //! #-----------------------Upload the the pdf to the FirebaseStorage-------------------#
+  Future uploadPDFfiles() async {
+    if (file == null) return print("nothing");
+    filename = file;
+    final destination = 'BookPDF/$filename';
+    print(' here is your destination ${destination}');
+    task = FirebaseApi.uploadFile(destination, file!);
+    if (task == null) return print("Task is null");
+    final snapshot = await task!;
+    urlDownload = await snapshot.ref.getDownloadURL().whenComplete(() {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => DisplayData()));
+    });
+    return urlDownload;
   }
 }

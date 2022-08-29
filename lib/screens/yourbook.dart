@@ -220,7 +220,6 @@ class _YourbookState extends State<Yourbook> with TickerProviderStateMixin {
           _iteam = detaildata;
         });
       });
-
       return extractdata;
     } else {
       throw Exception('Failed to load data');
@@ -254,7 +253,6 @@ class _YourbookState extends State<Yourbook> with TickerProviderStateMixin {
       extractdata.forEach((keys, value) {
         var useruid = value as Map<String, dynamic>;
         useruid.forEach((key, value) async {
-          print('Here delete book');
           if (id == value) {
             var deleteid = keys;
             var deleteresponse = await client
