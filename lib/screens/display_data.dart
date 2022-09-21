@@ -114,8 +114,8 @@ class _DisplayDataState extends State<DisplayData>
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: 350,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20),
+                              crossAxisSpacing: 3,
+                              mainAxisSpacing: 3),
                       itemCount: _iteam.length,
                       itemBuilder: (BuildContext ctx, index) {
                         var article = _iteam[index];

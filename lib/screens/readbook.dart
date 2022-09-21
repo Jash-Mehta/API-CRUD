@@ -52,10 +52,14 @@ class _ReadbookState extends State<Readbook> {
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          leading: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              )),
           elevation: 0,
           actions: [
             IconButton(

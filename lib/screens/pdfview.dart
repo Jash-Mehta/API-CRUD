@@ -33,7 +33,7 @@ class _PDFreaderState extends State<PDFreader> {
           leading: Builder(builder: (context) {
             return IconButton(
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                  Navigator.pop(context);
                 },
                 icon: const Icon(
                   Icons.arrow_back,
