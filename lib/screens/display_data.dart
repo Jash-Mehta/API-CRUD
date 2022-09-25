@@ -45,10 +45,11 @@ class _DisplayDataState extends State<DisplayData>
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          leading: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back)),
           elevation: 0,
           actions: [
             IconButton(

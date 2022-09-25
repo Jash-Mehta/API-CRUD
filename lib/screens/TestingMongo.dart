@@ -104,7 +104,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 },
               ),
               const SizedBox(
-                height: 25.0,
+                height: 15.0,
               ),
               DetailScreen(
                 hinttext: "Price",
@@ -114,7 +114,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 },
               ),
               const SizedBox(
-                height: 25.0,
+                height: 15.0,
               ),
               DetailScreen(
                 hinttext: "Author Name",
@@ -124,7 +124,14 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 },
               ),
               const SizedBox(
-                height: 25.0,
+                height: 15.0,
+              ),
+              DetailScreen(
+                hinttext: "Description",
+                icon: Icon(CupertinoIcons.info),
+              ),
+              const SizedBox(
+                height: 15.0,
               ),
               DetailScreen(
                 hinttext: "Image link",
@@ -134,7 +141,7 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
                 },
               ),
               const SizedBox(
-                height: 25.0,
+                height: 15.0,
               ),
               ListTile(
                 leading: IconButton(

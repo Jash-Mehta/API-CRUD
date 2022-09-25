@@ -56,7 +56,7 @@ class _ReadbookState extends State<Readbook> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,
               )),
@@ -132,17 +132,33 @@ class _ReadbookState extends State<Readbook> {
                       ),
                       SizedBox(
                         width: 250.0,
-                        height: 150.0,
+                        height: 100.0,
                         child: Flexible(
+                          flex: 1,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: Text(
                                 "Description:- Hello everyone this is Jash Mehta, very good developer and very good at developing",
-                                textAlign: TextAlign.justify,
+                                textAlign: TextAlign.start,
                                 style: GoogleFonts.playfairDisplay(
-                                    fontSize: 16.0,
+                                    fontSize: 15.0,
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w700)),
+                          ),
+                        ),
+                      ),
+                      //! #-----------------------BookOnwner Photo-------------------------#
+                      Container(
+                        height: 100.0,
+                        width: 200.0,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 50.0,
+                          ),
+                          title: Text(
+                            widget.author,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0),
                           ),
                         ),
                       )

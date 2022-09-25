@@ -9,18 +9,20 @@ class DetailScreen extends StatefulWidget {
   TextInputAction? inputAction;
   Icon? icon;
   String? predefine;
+  double? height;
 
-  DetailScreen({
-    Key? key,
-    required this.hinttext,
-    this.onchange,
-    this.controller,
-    this.onSaved,
-    this.keyboardType,
-    this.inputAction,
-    this.icon,
-    this.predefine,
-  }) : super(key: key);
+  DetailScreen(
+      {Key? key,
+      required this.hinttext,
+      this.onchange,
+      this.controller,
+      this.onSaved,
+      this.keyboardType,
+      this.inputAction,
+      this.icon,
+      this.predefine,
+      this.height})
+      : super(key: key);
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
