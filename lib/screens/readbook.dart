@@ -130,6 +130,22 @@ class _ReadbookState extends State<Readbook> {
                           print(rating);
                         },
                       ),
+                      SizedBox(
+                        width: 250.0,
+                        height: 150.0,
+                        child: Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Text(
+                                "Description:- Hello everyone this is Jash Mehta, very good developer and very good at developing",
+                                textAlign: TextAlign.justify,
+                                style: GoogleFonts.playfairDisplay(
+                                    fontSize: 16.0,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w700)),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   Column(
