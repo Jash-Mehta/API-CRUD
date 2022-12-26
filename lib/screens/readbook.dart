@@ -134,7 +134,6 @@ class _ReadbookState extends State<Readbook> {
                         width: 250.0,
                         height: 100.0,
                         child: Flexible(
-                          flex: 1,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: Text(
@@ -147,21 +146,6 @@ class _ReadbookState extends State<Readbook> {
                           ),
                         ),
                       ),
-                      //! #-----------------------BookOnwner Photo-------------------------#
-                      Container(
-                        height: 100.0,
-                        width: 200.0,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 50.0,
-                          ),
-                          title: Text(
-                            widget.author,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
-                          ),
-                        ),
-                      )
                     ],
                   ),
                   Column(

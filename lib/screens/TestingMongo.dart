@@ -14,7 +14,7 @@ import 'package:uuid/uuid.dart';
 import '../model/firebaseapi.dart';
 
 var book, price, author, image, uid;
-var filename;
+var pdffile, imagefile;
 
 class TestingMongoDB extends StatefulWidget {
   const TestingMongoDB({Key? key}) : super(key: key);
@@ -28,13 +28,15 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   void initState() {
     super.initState();
     uid = Uuid().v1();
+    Cdisplay = false;
   }
 
-  List data = [];
-  bool circularindicator = false;
-  File? file;
-  UploadTask? task;
-  var urlDownload;
+  bool Cdisplay = false;
+  File? pdffiles;
+  File? imagefiles;
+  UploadTask? pdftask;
+  UploadTask? imagetask;
+  var urlpdf, urlimage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +51,19 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
           leading: Builder(builder: (context) {
             return IconButton(
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                  Cdisplay
+                      ? Navigator.pop(context)
+                      : Scaffold.of(context).openDrawer();
                 },
-                icon: const Icon(
-                  Icons.clear_all,
-                  color: Colors.black,
-                ));
+                icon: Cdisplay
+                    ? const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      )
+                    : const Icon(
+                        Icons.clear_all,
+                        color: Colors.black,
+                      ));
           }),
           actions: const [
             Icon(
@@ -66,154 +75,230 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
         ),
         drawer: const DashDrawer(),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: Text(
-                      "Books Publish",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    height: 110.0,
-                    width: 80.0,
-                    margin: const EdgeInsets.only(right: 20.0),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: const AssetImage('assets/Mobilelife.png'),
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(1.0),
-                                BlendMode.dstATop),
-                            fit: BoxFit.cover)),
-                  ),
-                ],
-              ),
-              DetailScreen(
-                hinttext: "Book Name",
-                icon: const Icon(Icons.book),
-                onchange: (value) {
-                  book = value;
-                },
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              DetailScreen(
-                hinttext: "Price",
-                icon: const Icon(CupertinoIcons.money_dollar),
-                onchange: (value) {
-                  price = value;
-                },
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              DetailScreen(
-                hinttext: "Author Name",
-                icon: const Icon(Icons.person),
-                onchange: (value) {
-                  author = value;
-                },
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              DetailScreen(
-                hinttext: "Description",
-                icon: Icon(CupertinoIcons.info),
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              DetailScreen(
-                hinttext: "Image link",
-                icon: const Icon(Icons.photo),
-                onchange: (value) {
-                  image = value;
-                },
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              ListTile(
-                leading: IconButton(
-                    onPressed: () {
-                      selectfile();
-                    },
-                    icon: const Icon(
-                      Icons.picture_as_pdf,
-                      size: 35.0,
-                      color: Colors.black45,
-                    )),
-                title: const Text(
-                  "SELECT PDF",
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(
-                height: 25.0,
-              ),
-              SizedBox(
-                height: 40.0,
-                width: 150.0,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(onPrimary: Colors.blue),
-                    onPressed: () {
-                      // setState(() {
-                      //   circularindicator = true;
-                      //   circularindicator ? CircularProgressIndicator()""
-                      // });
-                      postdata();
-                      yourbookfile();
-
-                      uploadPDFfiles();
-                    },
-                    child: const Text(
-                      "Submit",
-                      style: TextStyle(color: Colors.white),
-                    )),
-              ),
-            ],
-          ),
-        ));
+            child: Cdisplay
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              selectfile();
+                            },
+                            child: Container(
+                                margin: const EdgeInsets.only(top: 20.0),
+                                height: 140.0,
+                                width: 140.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1.5),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
+                                    Icon(
+                                      Icons.upload_file,
+                                      size: 40.0,
+                                      color: Colors.black,
+                                    ),
+                                    Text("Upload PDF",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500))
+                                  ],
+                                )),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              selectimages();
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(top: 20.0),
+                                height: 140.0,
+                                width: 140.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1.5),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
+                                    Icon(
+                                      Icons.image,
+                                      size: 40.0,
+                                      color: Colors.black,
+                                    ),
+                                    Text("Upload Image",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500))
+                                  ],
+                                )),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                        width: 200.0,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                onPrimary: Colors.blue),
+                            onPressed: () {
+                              uploadPDFfiles();
+                              uploadImagefiles();
+                              postdata();
+                              yourbookfile();
+                            },
+                            child: const Text(
+                              "Submit",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              "Books Publish",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Container(
+                            height: 110.0,
+                            width: 80.0,
+                            margin: const EdgeInsets.only(right: 20.0),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: const AssetImage(
+                                        'assets/Mobilelife.png'),
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(1.0),
+                                        BlendMode.dstATop),
+                                    fit: BoxFit.cover)),
+                          ),
+                        ],
+                      ),
+                      DetailScreen(
+                        hinttext: "Book Name",
+                        icon: const Icon(Icons.book),
+                        onchange: (value) {
+                          book = value;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      DetailScreen(
+                        hinttext: "Price",
+                        icon: const Icon(CupertinoIcons.money_dollar),
+                        onchange: (value) {
+                          price = value;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      DetailScreen(
+                        hinttext: "Author Name",
+                        icon: const Icon(Icons.person),
+                        onchange: (value) {
+                          author = value;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 13.0, right: 13.0, top: 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                            hintText: 'Description',
+                            icon: const Icon(Icons.info),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 60, horizontal: 30),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                        width: 200.0,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                onPrimary: Colors.blue),
+                            onPressed: () {
+                              setState(() {
+                                Cdisplay = true;
+                              });
+                            },
+                            child: const Text(
+                              "Next",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      ),
+                    ],
+                  )));
   }
 
 // !  #----------------Posting Data in API-----------------#
   Future postdata() async {
     var client = http.Client();
-    print("Your download url is heree");
-    print(urlDownload);
     var response = await client.post(
         Uri.parse(
-            'https://instagram-ee2d1-default-rtdb.firebaseio.com/detail/$uid.json'),
+            'https://instagram-ee2d1-default-rtdb.firebaseio.com//detail/$uid.json'),
         body: jsonEncode({
           'Book': book,
           'Price': price,
           'Author': author,
           'favdata': false,
-          'imagelink': image,
-          'pdfUrl': urlDownload,
+          'imagelink': await urlimage,
+          'pdfUrl': await urlpdf,
         }));
   }
 
-// ! #----------------Selecting files from the devices---------------#
+// ! #----------------Selecting pdf from the devices---------------#
   Future selectfile() async {
     final result = await FilePicker.platform.pickFiles(
         allowMultiple: false,
         allowedExtensions: ['pdf'],
         type: FileType.custom);
-    if (result == null) return;
+    if (result == null) return print("null is return");
     var path = result.files.single.path!;
     setState(() {
-      file = File(path);
+      pdffiles = File(path);
+    });
+  }
+
+// ! #----------------Selecting images from the devices---------------#
+  Future selectimages() async {
+    final result = await FilePicker.platform
+        .pickFiles(allowMultiple: false, type: FileType.image);
+    if (result == null) return print("null is return");
+    var path = result.files.single.path!;
+    setState(() {
+      imagefiles = File(path);
     });
   }
 
@@ -230,16 +315,27 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
 
   //! #-----------------------Upload the the pdf to the FirebaseStorage-------------------#
   Future uploadPDFfiles() async {
-    if (file == null) return print("nothing");
-    filename = file;
-    final destination = 'BookPDF/$filename';
+    if (pdffiles == null) return print("nothing");
+    pdffile = pdffiles;
+    final destination = 'BookPDF/$pdffile';
     print(' here is your destination ${destination}');
-    task = FirebaseApi.uploadFile(destination, file!);
-    if (task == null) return print("Task is null");
-    final snapshot = await task!;
-    urlDownload = await snapshot.ref.getDownloadURL().whenComplete(() {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => DisplayData()));
-    });
-    return urlDownload;
+    pdftask = FirebasePDFApi.uploadFile(destination, pdffiles!);
+    if (pdftask == null) return print("Task is null");
+    final snapshot = await pdftask!.whenComplete(() {});
+    urlpdf = await snapshot.ref.getDownloadURL();
+    return urlpdf;
+  }
+
+  //! #-----------------------Upload the the images to the FirebaseStorage-------------------#
+  Future uploadImagefiles() async {
+    if (imagefiles == null) return print("nothing");
+    imagefile = imagefiles;
+    final destination = 'BookImage/$imagefile';
+    print(' here is your destination ${destination}');
+    imagetask = FirebaseimageApi.uploadFile(destination, imagefiles!);
+    if (imagetask == null) return print("Task is null");
+    final snapshot = await imagetask!.whenComplete(() {});
+    urlimage = await snapshot.ref.getDownloadURL();
+    return urlimage;
   }
 }
