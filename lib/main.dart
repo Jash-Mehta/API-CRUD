@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:apipratice/screens/cart.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/screens/sign_up.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +14,7 @@ Future<void> main() async {
           appId: '1:678956148693:ios:36d2ab4b7b6e35f78cff5c',
           messagingSenderId: '678956148693',
           projectId: 'instagram-ee2d1'));
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 

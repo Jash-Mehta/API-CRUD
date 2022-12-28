@@ -206,8 +206,10 @@ class _DisplayDataState extends State<DisplayData>
                                                 Icons.favorite_outline)),
                                     IconButton(
                                         onPressed: () {
+                                          
                                           cartdata(article.id, article.book,
                                               article.price, article.imagelink);
+                                            
                                           setState(() {});
                                         },
                                         icon: const Icon(CupertinoIcons.cart)),
@@ -300,7 +302,8 @@ class _DisplayDataState extends State<DisplayData>
               'cartbook': cartbook,
               'cartprice': cartprice,
               'imageUrl': imageurl,
-              'NetQuty': 1
+              'NetQuty': 1,
+              'TotalQuty': cartprice
             }))
         .whenComplete(() => print("Cart data was added successfully"));
   }

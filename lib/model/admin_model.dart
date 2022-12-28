@@ -38,12 +38,14 @@ class Cartlist {
   String price;
   int cartamount;
   String imageurl;
+  String totalQuty;
   Cartlist({
     required this.id,
     required this.book,
     required this.price,
     required this.cartamount,
     required this.imageurl,
+    required this.totalQuty,
   });
 }
 

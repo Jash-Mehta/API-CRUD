@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:apipratice/model/admin_model.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/screens/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class Carts extends StatefulWidget {
@@ -14,23 +16,46 @@ class Carts extends StatefulWidget {
 }
 
 class _CartsState extends State<Carts> with TickerProviderStateMixin {
+  final _razorpay = Razorpay();
   List<Cartlist> _cartlist = [];
+  List<dynamic> data = [];
   int? qutyamount;
+  int? subtotal;
   late AnimationController animationController;
   @override
   void dispose() {
-    // TODO: implement dispose
     animationController.dispose();
+    _razorpay.clear();
     super.dispose();
   }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+      _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    });
     super.initState();
     animationController =
         AnimationController(duration: new Duration(seconds: 2), vsync: this);
     animationController.repeat();
   }
+
+// ! #----------------------Handling every success and error response-------------------#
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+    print(response);
+    verifySignature(
+      signature: response.signature,
+      paymentId: response.paymentId,
+      orderId: response.orderId,
+    );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {}
+
+  void _handleExternalWallet(ExternalWalletResponse response) {}
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +92,6 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                     itemBuilder: (BuildContext context, int index) {
                       final article = _cartlist[index];
                       var a = int.parse(article.price);
-
                       return Dismissible(
                         background: const Icon(
                           Icons.delete,
@@ -109,9 +133,11 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                       ),
                                     ),
                                     Text(
-                                      "₹ ${article.price}",
+                                      "₹ ${article.totalQuty}",
                                       style: const TextStyle(
-                                          fontSize: 18.0, color: Colors.black),
+                                          fontSize: 18.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
                                       height: 25.0,
@@ -129,7 +155,9 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                                   qutyamount = _cartlist[index]
                                                       .cartamount;
                                                   cartamount(
-                                                      article.id, qutyamount!);
+                                                      article.id,
+                                                      qutyamount!,
+                                                      article.price);
                                                 });
                                               },
                                               child: const Icon(Icons.add)),
@@ -142,6 +170,7 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                                 fontSize: 18.0,
                                                 fontWeight: FontWeight.w700),
                                           ),
+ //! #----------------neg.& posti. button is here----------------#
                                           InkWell(
                                               onTap: () {
                                                 setState(() {
@@ -154,48 +183,39 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                                   qutyamount = _cartlist[index]
                                                       .cartamount;
                                                   cartamount(
-                                                      article.id, qutyamount!);
+                                                      article.id,
+                                                      qutyamount!,
+                                                      article.price);
                                                 });
                                               },
-                                              child: const Icon(Icons.remove)),
+                                              child: _cartlist[index]
+                                                          .cartamount ==
+                                                      0
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        deletedata(article.id);
+                                                        setState(() {});
+                                                      },
+                                                      child: Icon(Icons.delete))
+                                                  : Icon(Icons.remove)),
                                         ],
                                       ),
                                     ),
                                     //!#--------------------BuyNow Icon(Orderscreen)-------------------#
-                                    Text(
-                                      "SubTotal: ₹${a * article.cartamount}",
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          createOrder(article.book,
+                                              int.parse(article.totalQuty));
+                                        },
+                                        child: Text("BuyNow"))
                                   ],
-                                )
+                                ),
                               ],
                             )),
                       );
                     },
                   ),
                 ),
-                SizedBox(
-                    width: double.infinity,
-                    height: 58.0,
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: ListTile(
-                          title: const Text(
-                            "ORDER NOW",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20.0),
-                          ),
-                          trailing: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.arrow_right_alt_rounded,
-                                color: Colors.white,
-                                size: 28.0,
-                              )),
-                        )))
               ]);
             } else if (snapshot.hasError) {
               return const Center(child: Text("Network issue"));
@@ -234,11 +254,13 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
       var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
       extractdata.forEach((key, value) {
         cartlist.add(Cartlist(
-            id: key,
-            book: value['cartbook'],
-            price: value['cartprice'],
-            cartamount: value['NetQuty'],
-            imageurl: value['imageUrl']));
+          id: key,
+          book: value['cartbook'],
+          price: value['cartprice'],
+          cartamount: value['NetQuty'],
+          imageurl: value['imageUrl'],
+          totalQuty: value['TotalQuty'],
+        ));
       });
       _cartlist = cartlist;
       return extractdata;
@@ -263,12 +285,97 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
   }
 
 //! #---------------------------Update the data to the API[PATCH] in cart Data--------------#
-  Future cartamount(String id, int quty) async {
+  Future cartamount(String id, int quty, String cartprice) async {
     var client = http.Client();
     var response = await client.patch(
         Uri.parse(
           'https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/Cart/$id.json',
         ),
-        body: jsonEncode({'NetQuty': quty}));
+        body: jsonEncode(
+            {'NetQuty': quty, 'TotalQuty': '${quty * int.parse(cartprice)}'}));
+  }
+
+//! #------------------------CreateOrder and main function------------------------#
+  void createOrder(String book, int amount) async {
+    String username = 'rzp_test_Fwj1OKArcSD8o4';
+    String password = '0kzHRaMm3JhXU8A4BHtEIliM';
+    String basicAuth =
+        'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+    Map<String, dynamic> body = {
+      "amount": amount * 100,
+      "currency": "INR",
+      "receipt": "rcptid_11"
+    };
+    var res = await http.post(Uri.https('api.razorpay.com', 'v1/orders'),
+        headers: <String, String>{
+          "Content-Type": 'application/json',
+          "authorization": basicAuth
+        },
+        body: jsonEncode(body));
+    if (res.statusCode == 200) {
+      openGateway(jsonDecode(res.body)['id'], amount, book);
+    }
+  }
+
+// ! #------------------Opening the gateway interface------------------------#
+  openGateway(String orderId, int amount, String book) {
+    var options = {
+      'key': 'rzp_test_Fwj1OKArcSD8o4',
+      'amount': amount * 100, //in the smallest currency sub-unit.
+      'name': "E-BookStore",
+      'order_id': orderId, // Generate order_id using Orders API
+      'description': book,
+      'timeout': 60, // in seconds
+      'prefill': {'contact': '7096747394', 'email': 'jashmehta94@gmail.com'}
+    };
+    _razorpay.open(options);
+  }
+
+// ! #---------------------------Verifying the payment Data---------------------#
+  verifySignature({
+    String? signature,
+    String? paymentId,
+    String? orderId,
+  }) async {
+    Map<String, dynamic> body = {
+      'razorpay_signature': signature,
+      'razorpay_payment_id': paymentId,
+      'razorpay_order_id': orderId,
+    };
+
+    var parts = [];
+    body.forEach((key, value) {
+      parts.add('${Uri.encodeQueryComponent(key)}='
+          '${Uri.encodeQueryComponent(value)}');
+    });
+    var formData = parts.join('&');
+    var res = await http.post(
+      Uri.https(
+        "10.0.2.2", // my ip address , localhost
+        "razorpay_signature_verify.php",
+      ),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded", // urlencoded
+      },
+      body: formData,
+    );
+
+    print(res.body);
+    if (res.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(res.body),
+        ),
+      );
+    }
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

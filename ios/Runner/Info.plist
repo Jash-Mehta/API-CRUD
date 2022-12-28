@@ -42,6 +42,12 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+	<string>tez</string>
+    <string>phonepe</string>
+    <string>paytmmp</string>
+</array>
 	<true/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
