@@ -1,8 +1,6 @@
 import 'dart:convert';
-
-import 'package:apipratice/model/admin_model.dart';
 import 'package:apipratice/screens/TestingMongo.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart';
 
 var password, email;
@@ -14,44 +12,111 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("SIGN UP", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        body: Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/Bitmap.png"),
+          fit: BoxFit.fill,
+        ),
       ),
-      body: Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          TextFormField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+          Neumorphic(
+            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+            style: NeumorphicStyle(
+                shape: NeumorphicShape.concave,
+                shadowDarkColorEmboss: Colors.black87,
+                depth: -5,
+                intensity: 0.86,
+                boxShape:
+                    NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                lightSource: LightSource.topLeft,
+                color: Colors.white),
+            child: TextFormField(
+              decoration: InputDecoration(
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: NeumorphicIcon(
+                    Icons.email,
+                    size: 30.0,
+                    style: const NeumorphicStyle(color: Colors.grey),
+                  ),
+                ),
+                border: InputBorder.none,
+                hintStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20.0),
                 hintText: "Email",
-                icon: const Icon(Icons.email)),
-            onChanged: (value) {
-              email = value;
-            },
+              ),
+              onChanged: (value) {
+                email = value;
+              },
+            ),
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+          Neumorphic(
+            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+            style: NeumorphicStyle(
+                shape: NeumorphicShape.concave,
+                shadowDarkColorEmboss: Colors.black87,
+                depth: -5,
+                intensity: 0.86,
+                boxShape:
+                    NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                lightSource: LightSource.topLeft,
+                color: Colors.white),
+            child: TextFormField(
+              decoration: InputDecoration(
+              
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: NeumorphicIcon(
+                    Icons.lock,
+                    size: 30.0,
+                    style: const NeumorphicStyle(color: Colors.grey),
+                  ),
+                ),
+                border: InputBorder.none,
+                hintStyle: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20.0),
                 hintText: "Password",
-                icon: const Icon(Icons.lock)),
-            onChanged: (value) {
-              password = value;
-            },
+              ),
+              onChanged: (value) {
+                password = value;
+              },
+            ),
           ),
-          ElevatedButton(
-              onPressed: () {
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .6,
+            child: NeumorphicButton(
+              onPressed: (() {
                 Auth().signup(email, password).whenComplete(() =>
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => TestingMongoDB())));
-                print("auth class is called");
-              },
-              child: const Text("Login"))
+              }),
+              style: NeumorphicStyle(
+                  shape: NeumorphicShape.concave,
+                  depth: 10,
+                  intensity: 0.86,
+                  surfaceIntensity: 0.86,
+                  boxShape:
+                      NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                  lightSource: LightSource.topLeft,
+                  color: Colors.white),
+              curve: Neumorphic.DEFAULT_CURVE,
+              child: const Text(
+                "LOGIN",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+            ),
+          ),
         ],
       ),
-    );
+    ));
   }
 }
 

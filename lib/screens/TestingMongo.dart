@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:apipratice/screens/display_data.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/widget/drawer.dart';
 import 'package:apipratice/widget/text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
@@ -74,192 +73,256 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
           elevation: 0,
         ),
         drawer: const DashDrawer(),
-        body: SingleChildScrollView(
-            child: Cdisplay
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              selectfile();
-                            },
-                            child: Container(
-                                margin: const EdgeInsets.only(top: 20.0),
-                                height: 140.0,
-                                width: 140.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  border: Border.all(
-                                      color: Colors.black, width: 1.5),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Icon(
-                                      Icons.upload_file,
-                                      size: 40.0,
-                                      color: Colors.black,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/main_page_bg.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: SingleChildScrollView(
+              child: Cdisplay
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                selectfile();
+                              },
+                              child: Neumorphic(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.concave,
+                                    depth: -5,
+                                    intensity: 0.86,
+                                    shadowDarkColorEmboss: Colors.black87,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(12)),
+                                    lightSource: LightSource.topLeft,
+                                    color: Colors.white),
+                                child: Container(
+                                    margin: const EdgeInsets.only(top: 20.0),
+                                    height: 140.0,
+                                    width: 140.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    Text("Upload PDF",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500))
-                                  ],
-                                )),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              selectimages();
-                            },
-                            child: Container(
-                                margin: EdgeInsets.only(top: 20.0),
-                                height: 140.0,
-                                width: 140.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  border: Border.all(
-                                      color: Colors.black, width: 1.5),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Icon(
-                                      Icons.image,
-                                      size: 40.0,
-                                      color: Colors.black,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        NeumorphicIcon(
+                                          Icons.upload_file_rounded,
+                                          size: 35.0,
+                                          style: const NeumorphicStyle(
+                                              shadowDarkColor: Colors.black,
+                                              color: Colors.black),
+                                        ),
+                                        const Text("Upload PDF",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.w500))
+                                      ],
+                                    )),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                selectimages();
+                              },
+                              child: Neumorphic(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    depth: -5,
+                                    intensity: 0.86,
+                                    shadowDarkColorEmboss: Colors.black87,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(12)),
+                                    lightSource: LightSource.topLeft,
+                                    color: Colors.white),
+                                child: Container(
+                                    margin: const EdgeInsets.only(top: 20.0),
+                                    height: 140.0,
+                                    width: 140.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    Text("Upload Image",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500))
-                                  ],
-                                )),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      SizedBox(
-                        height: 40.0,
-                        width: 200.0,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.blue),
-                            onPressed: () {
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        NeumorphicIcon(
+                                          Icons.image,
+                                          size: 35.0,
+                                          style: const NeumorphicStyle(
+                                              shadowDarkColor: Colors.black,
+                                              color: Colors.black),
+                                        ),
+                                        const Text("Upload Image",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.w500))
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .6,
+                          child: NeumorphicButton(
+                            onPressed: (() {
                               uploadPDFfiles();
                               uploadImagefiles();
                               postdata();
                               yourbookfile();
-                            },
+                            }),
+                            style: NeumorphicStyle(
+                                shape: NeumorphicShape.concave,
+                                depth: 10,
+                                intensity: 0.86,
+                                surfaceIntensity: 0.86,
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.circular(12)),
+                                lightSource: LightSource.topLeft,
+                                color: Colors.white),
+                            curve: Neumorphic.DEFAULT_CURVE,
                             child: const Text(
-                              "Submit",
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
-                    ],
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              "Books Publish",
+                              "SUBMIT",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0),
                             ),
                           ),
-                          Container(
-                            height: 110.0,
-                            width: 80.0,
-                            margin: const EdgeInsets.only(right: 20.0),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: const AssetImage(
-                                        'assets/Mobilelife.png'),
-                                    colorFilter: ColorFilter.mode(
-                                        Colors.black.withOpacity(1.0),
-                                        BlendMode.dstATop),
-                                    fit: BoxFit.cover)),
-                          ),
-                        ],
-                      ),
-                      DetailScreen(
-                        hinttext: "Book Name",
-                        icon: const Icon(Icons.book),
-                        onchange: (value) {
-                          book = value;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      DetailScreen(
-                        hinttext: "Price",
-                        icon: const Icon(CupertinoIcons.money_dollar),
-                        onchange: (value) {
-                          price = value;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      DetailScreen(
-                        hinttext: "Author Name",
-                        icon: const Icon(Icons.person),
-                        onchange: (value) {
-                          author = value;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 13.0, right: 13.0, top: 10.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            hintText: 'Description',
-                            icon: const Icon(Icons.info),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 60, horizontal: 30),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 15.0, bottom: 20.0, top: 15.0),
+                              child: Text(
+                                "BOOK \nPUBLISH",
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 55.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        DetailScreen(
+                          hinttext: "Book Name",
+                          keyboardType: TextInputType.text,
+                          icon: const Icon(Icons.book),
+                          onchange: (value) {
+                            book = value;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        DetailScreen(
+                          hinttext: "Your Price",
+                          keyboardType: TextInputType.phone,
+                          icon: const Icon(CupertinoIcons.money_dollar),
+                          onchange: (value) {
+                            price = value;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        DetailScreen(
+                          keyboardType: TextInputType.text,
+                          hinttext: "Author Name",
+                          icon: const Icon(Icons.person),
+                          onchange: (value) {
+                            author = value;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 13.0, right: 13.0, top: 10.0),
+                          child: Neumorphic(
+                            margin:
+                                const EdgeInsets.only(left: 5.0, right: 5.0),
+                            style: NeumorphicStyle(
+                                shape: NeumorphicShape.concave,
+                                depth: -5,
+                                intensity: 0.86,
+                                shadowDarkColorEmboss: Colors.black,
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.circular(12)),
+                                lightSource: LightSource.topLeft,
+                                color: Colors.white),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                                border: InputBorder.none,
+                                hintText: 'Description',
+                                prefixIcon: Icon(Icons.info),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 60, horizontal: 30),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      SizedBox(
-                        height: 40.0,
-                        width: 200.0,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.blue),
-                            onPressed: () {
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .6,
+                          child: NeumorphicButton(
+                            onPressed: (() {
                               setState(() {
                                 Cdisplay = true;
                               });
-                            },
+                            }),
+                            style: NeumorphicStyle(
+                                shape: NeumorphicShape.concave,
+                                depth: 10,
+                                intensity: 0.86,
+                                surfaceIntensity: 0.86,
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.circular(12)),
+                                lightSource: LightSource.topLeft,
+                                color: Colors.white),
+                            curve: Neumorphic.DEFAULT_CURVE,
                             child: const Text(
-                              "Next",
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
-                    ],
-                  )));
+                              "NEXT",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+        ));
   }
 
 // !  #----------------Posting Data in API-----------------#
@@ -273,8 +336,8 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
           'Price': price,
           'Author': author,
           'favdata': false,
-          'imagelink': await urlimage,
-          'pdfUrl': await urlpdf,
+          'imagelink': urlimage,
+          'pdfUrl': urlpdf,
         }));
   }
 

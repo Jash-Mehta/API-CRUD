@@ -44,8 +44,7 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
 
 // ! #----------------------Handling every success and error response-------------------#
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Do something when payment succeeds
-    print(response);
+    // Do something when payment succeed
     verifySignature(
       signature: response.signature,
       paymentId: response.paymentId,
@@ -170,7 +169,7 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                                 fontSize: 18.0,
                                                 fontWeight: FontWeight.w700),
                                           ),
- //! #----------------neg.& posti. button is here----------------#
+                                          //! #----------------neg.& posti. button is here----------------#
                                           InkWell(
                                               onTap: () {
                                                 setState(() {
@@ -204,8 +203,10 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
                                     //!#--------------------BuyNow Icon(Orderscreen)-------------------#
                                     ElevatedButton(
                                         onPressed: () {
-                                          createOrder(article.book,
-                                              int.parse(article.totalQuty));
+                                          createOrder(
+                                              article.book,
+                                              int.parse(article.totalQuty),
+                                              article.imageurl);
                                         },
                                         child: Text("BuyNow"))
                                   ],
@@ -296,7 +297,7 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
   }
 
 //! #------------------------CreateOrder and main function------------------------#
-  void createOrder(String book, int amount) async {
+  void createOrder(String book, int amount, String image) async {
     String username = 'rzp_test_Fwj1OKArcSD8o4';
     String password = '0kzHRaMm3JhXU8A4BHtEIliM';
     String basicAuth =
@@ -313,18 +314,19 @@ class _CartsState extends State<Carts> with TickerProviderStateMixin {
         },
         body: jsonEncode(body));
     if (res.statusCode == 200) {
-      openGateway(jsonDecode(res.body)['id'], amount, book);
+      openGateway(jsonDecode(res.body)['id'], amount, book, image);
     }
   }
 
 // ! #------------------Opening the gateway interface------------------------#
-  openGateway(String orderId, int amount, String book) {
+  openGateway(String orderId, int amount, String book, String image) {
     var options = {
       'key': 'rzp_test_Fwj1OKArcSD8o4',
       'amount': amount * 100, //in the smallest currency sub-unit.
       'name': "E-BookStore",
       'order_id': orderId, // Generate order_id using Orders API
       'description': book,
+      'image': image,
       'timeout': 60, // in seconds
       'prefill': {'contact': '7096747394', 'email': 'jashmehta94@gmail.com'}
     };

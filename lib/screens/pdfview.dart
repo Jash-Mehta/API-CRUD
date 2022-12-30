@@ -54,7 +54,6 @@ class _PDFreaderState extends State<PDFreader> {
                     roundoffpages = total!;
                   });
                 }),
-                nightMode: true,
                 onError: (error) {
                   print('Error');
                 },
