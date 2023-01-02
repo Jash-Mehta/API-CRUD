@@ -45,7 +45,7 @@ class _PDFreaderState extends State<PDFreader> {
         body: Stack(
           children: [
             PDFView(
-                fitPolicy: FitPolicy.HEIGHT,
+                fitPolicy: FitPolicy.WIDTH,
                 filePath: widget.pdfurl,
                 swipeHorizontal: true,
                 onPageChanged: ((page, total) {

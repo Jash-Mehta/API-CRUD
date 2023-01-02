@@ -99,16 +99,15 @@ class _ReadbookState extends State<Readbook> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0, top: 30.0),
+                        padding: const EdgeInsets.only(top: 30.0),
                         child: Text(widget.bookname,
-                            maxLines: 1,
                             overflow: TextOverflow.visible,
                             softWrap: false,
                             style: GoogleFonts.playfairDisplay(
-                                fontSize: 30.0, fontWeight: FontWeight.w600)),
+                                fontSize: 27.0, fontWeight: FontWeight.w600)),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: const EdgeInsets.only(left: 0.0),
                         child: Text('WrittenBy:-${widget.author}',
                             textAlign: TextAlign.justify,
                             style: GoogleFonts.playfairDisplay(
