@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:apipratice/screens/TestingMongo.dart';
+import 'package:apipratice/widget/bottombar.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart';
 
@@ -67,7 +68,6 @@ class Login extends StatelessWidget {
                 color: Colors.white),
             child: TextFormField(
               decoration: InputDecoration(
-              
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: NeumorphicIcon(
@@ -92,7 +92,7 @@ class Login extends StatelessWidget {
               onPressed: (() {
                 Auth().signup(email, password).whenComplete(() =>
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => TestingMongoDB())));
+                        MaterialPageRoute(builder: (_) => BottomBar())));
               }),
               style: NeumorphicStyle(
                   shape: NeumorphicShape.concave,

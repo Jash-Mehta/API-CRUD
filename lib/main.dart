@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:apipratice/screens/cart.dart';
+import 'package:apipratice/screens/display_data.dart';
+import 'package:apipratice/screens/fav_list.dart';
 import 'package:apipratice/screens/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 class WelcomeScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

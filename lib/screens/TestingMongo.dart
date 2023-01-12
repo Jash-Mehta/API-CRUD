@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:apipratice/screens/cart.dart';
+import 'package:apipratice/screens/display_data.dart';
+import 'package:apipratice/screens/fav_list.dart';
 import 'package:apipratice/screens/login.dart';
 import 'package:apipratice/widget/drawer.dart';
 import 'package:apipratice/widget/text_field.dart';
@@ -34,46 +37,15 @@ class _TestingMongoDBState extends State<TestingMongoDB> {
   File? pdffiles;
   File? imagefiles;
   UploadTask? pdftask;
+  int _selectedIndex = 0;
   UploadTask? imagetask;
   var urlpdf, urlimage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text(
-            "Dashboard",
-            style: TextStyle(color: Colors.black, fontSize: 20.0),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: Builder(builder: (context) {
-            return IconButton(
-                onPressed: () {
-                  Cdisplay
-                      ? Navigator.pop(context)
-                      : Scaffold.of(context).openDrawer();
-                },
-                icon: Cdisplay
-                    ? const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      )
-                    : const Icon(
-                        Icons.clear_all,
-                        color: Colors.black,
-                      ));
-          }),
-          actions: const [
-            Icon(
-              Icons.book_online_outlined,
-              color: Colors.black,
-            )
-          ],
-          elevation: 0,
-        ),
-        drawer: const DashDrawer(),
         body: Container(
+          margin: EdgeInsets.only(top: 40.0),
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(

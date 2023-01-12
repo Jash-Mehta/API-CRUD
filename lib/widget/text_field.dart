@@ -43,7 +43,7 @@ class _DetailScreenState extends State<DetailScreen> {
             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
             lightSource: LightSource.topLeft,
             shadowDarkColorEmboss: Colors.black87,
-            color: Colors.white),
+            color: Color.fromRGBO(255, 255, 255, 1)),
         child: TextFormField(
           initialValue: widget.predefine,
           decoration: InputDecoration(
