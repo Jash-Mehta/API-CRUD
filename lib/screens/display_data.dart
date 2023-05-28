@@ -88,7 +88,7 @@ class _DisplayDataState extends State<DisplayData>
                       itemBuilder: (context, index) {
                         var article = _iteam[index];
                         return Container(
-                          height: 245,
+                          height: 260,
                           width: 202,
                           child: Stack(children: [
                             Container(
@@ -247,7 +247,9 @@ class _DisplayDataState extends State<DisplayData>
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(left: 14.0),
+                      padding: const EdgeInsets.only(
+                        left: 14.0,
+                      ),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -270,7 +272,7 @@ class _DisplayDataState extends State<DisplayData>
                           ])),
                   SizedBox(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.45,
+                      height: MediaQuery.of(context).size.height / 3,
                       child: Stack(children: [
                         Positioned(
                           child: Container(

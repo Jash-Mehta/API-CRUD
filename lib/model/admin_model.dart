@@ -68,3 +68,13 @@ class Authentication {
     required this.refreshtoken,
   });
 }
+class DictWord {
+  String meaning;
+  String partofspeech;
+  String example;
+  DictWord({
+    required this.meaning,
+    required this.partofspeech,
+    required this.example,
+  });
+}

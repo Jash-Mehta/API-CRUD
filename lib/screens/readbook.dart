@@ -123,81 +123,83 @@ class _ReadbookState extends State<Readbook> {
                         SizedBox(
                           width: 250.0,
                           height: 100.0,
-                          child: Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                  "Description:- Hello everyone this is Jash Mehta, very good developer and very good at developing",
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.playfairDisplay(
-                                      fontSize: 15.0,
-                                      fontStyle: FontStyle.italic,
-                                      fontWeight: FontWeight.w700)),
-                            ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Text(
+                                "Description:- Hello everyone this is Jash Mehta, very good developer and very good at developing",
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.playfairDisplay(
+                                    fontSize: 15.0,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w700)),
                           ),
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(
-                            top: 20.0,
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                              top: 20.0,
+                            ),
+                            child: Image.network(
+                              widget.imageurl,
+                              width: 135.0,
+                              height: 190.0,
+                            ),
                           ),
-                          child: Image.network(
-                            widget.imageurl,
-                            width: 135.0,
-                            height: 190.0,
+                          OutlinedButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) => PDFreader(
+                                              pdfurl: widget.pdfurl,
+                                              booktitle: widget.bookname,
+                                            ))));
+                              },
+                              style: ButtonStyle(
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.pressed))
+                                        return Colors.black26;
+                                      return null;
+                                    },
+                                  ),
+                                  side: MaterialStateProperty.all(
+                                      const BorderSide(
+                                          color: Colors.black, width: 2.0))),
+                              child: const Text(
+                                "Read Book",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20.0),
+                              )),
+                          Row(
+                            children: [
+                              FloatingActionButton(
+                                heroTag: "b1",
+                                backgroundColor: Colors.black,
+                                onPressed: () {},
+                                child: const Icon(CupertinoIcons.cart),
+                              ),
+                              const SizedBox(
+                                width: 9.0,
+                              ),
+                              FloatingActionButton(
+                                heroTag: "b2",
+                                backgroundColor: Colors.black,
+                                hoverColor: Color.fromARGB(255, 253, 253, 253),
+                                onPressed: () {},
+                                child: const Icon(CupertinoIcons.heart),
+                              ),
+                            ],
                           ),
-                        ),
-                        OutlinedButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => PDFreader(
-                                            pdfurl: pathPDF,
-                                            booktitle: widget.bookname,
-                                          ))));
-                            },
-                            style: ButtonStyle(
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed))
-                                      return Colors.black26;
-                                    return null;
-                                  },
-                                ),
-                                side: MaterialStateProperty.all(
-                                    const BorderSide(
-                                        color: Colors.black, width: 2.0))),
-                            child: const Text(
-                              "Read Book",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 20.0),
-                            )),
-                        Row(
-                          children: [
-                            FloatingActionButton(
-                              heroTag: "b1",
-                              backgroundColor: Colors.black,
-                              onPressed: () {},
-                              child: const Icon(CupertinoIcons.cart),
-                            ),
-                            const SizedBox(
-                              width: 9.0,
-                            ),
-                            FloatingActionButton(
-                              heroTag: "b2",
-                              backgroundColor: Colors.black,
-                              hoverColor: Color.fromARGB(255, 253, 253, 253),
-                              onPressed: () {},
-                              child: const Icon(CupertinoIcons.heart),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),

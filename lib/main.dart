@@ -28,19 +28,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: Theme.of(context).textTheme.apply(
-              displayColor: kBlackColor,
-            ),
-      ),
+      // theme: ThemeData(
+      //   scaffoldBackgroundColor: Colors.white,
+      //   textTheme: Theme.of(context).textTheme.apply(
+      //         displayColor: kBlackColor,
+      //       ),
+      // ),
       home: WelcomeScreen(),
     );
   }
 }
 
 class WelcomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
