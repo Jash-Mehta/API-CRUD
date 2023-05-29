@@ -9,6 +9,9 @@ import 'package:http/http.dart' as http;
 
 String? keyword;
 List<DictWord> dictword = [];
+PdfViewerController _controller = PdfViewerController();
+
+enum SampleItem { itemOne, itemTwo, itemThree }
 
 class PDFreader extends StatefulWidget {
   String pdfurl;
@@ -37,9 +40,11 @@ class _PDFreaderState extends State<PDFreader> {
   int currentpages = 0;
   int roundoffpages = 0;
   bool isready = false;
+  var startpage, endpage;
   bool isselectready = false;
+  bool readingmode = false;
+  PdfViewerController _pdfViewerController = PdfViewerController();
 
-  late PDFViewController _pdfViewerController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,62 +65,107 @@ class _PDFreaderState extends State<PDFreader> {
                   color: Colors.black,
                 ));
           }),
-          actions: const [
+          actions: [
             Icon(
               Icons.search,
               color: Colors.black,
             ),
-            Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Icon(
-                Icons.bookmark,
-                color: Colors.black,
-              ),
-            )
+            PopupMenuButton<int>(
+              itemBuilder: (context) => [
+                // popupmenu item 1
+                PopupMenuItem(
+                  value: 1,
+                  onTap: () {
+                    _pdfViewerController.zoomLevel = 1.5;
+                    readingmode = true;
+                    setState(() {});
+                  },
+                  // row has two child icon and text.
+                  child: Row(
+                    children: [
+                      Icon(Icons.book_outlined),
+                      SizedBox(
+                        // sized box with width 10
+                        width: 10,
+                      ),
+                      Text("Reading Mode")
+                    ],
+                  ),
+                ),
+                // popupmenu item 2
+                PopupMenuItem(
+                  value: 2,
+                  // row has two child icon and text
+                  child: Row(
+                    children: [
+                      Icon(Icons.bookmark_add),
+                      SizedBox(
+                        // sized box with width 10
+                        width: 10,
+                      ),
+                      Text("Book Mark")
+                    ],
+                  ),
+                ),
+              ],
+              offset: Offset(0, 50),
+              color: Colors.grey,
+              elevation: 2,
+            ),
           ],
           elevation: 0,
         ),
-        body: Stack(
-          children: [
-            SfPdfViewer.network(widget.pdfurl,
-                interactionMode: PdfInteractionMode.selection,
-                scrollDirection: PdfScrollDirection.horizontal,
-                pageLayoutMode: PdfPageLayoutMode.single,
-                enableTextSelection: true, onPageChanged: (details) {
-              print(details.newPageNumber);
-            }, onTextSelectionChanged: (details) {
-              keyword = details.selectedText;
+        body: SfPdfViewer.network(widget.pdfurl,
+            interactionMode: PdfInteractionMode.selection,
+            scrollDirection: PdfScrollDirection.horizontal,
+            pageLayoutMode: PdfPageLayoutMode.single,
+            enableDoubleTapZooming: true,
+            enableTextSelection: true,
+            controller: _pdfViewerController, onPageChanged: (details) {
+          readingmode ? _pdfViewerController.zoomLevel = 1.5 : 0;
 
-              isselectready = false;
-              setState(() {
-                isready = true;
-                isselectready = true;
-              });
-            }),
-          ],
-        ),
+          setState(() {});
+        }, onTextSelectionChanged: (PdfTextSelectionChangedDetails details) {
+          keyword = details.selectedText;
+          final selectionreact = details.globalSelectedRegion;
+
+          isselectready = false;
+          setState(() {
+            isready = true;
+            isselectready = true;
+          });
+        }),
         floatingActionButton: isready
             ? FloatingActionButton(
                 child: const Icon(CupertinoIcons.doc_richtext),
                 onPressed: () {
                   getdata();
-                  isselectready
-                      ? showDialog(
-                          context: context,
-                          builder: ((context) => AlertDialog(
-                                title: Text("Meaning of ${keyword}"),
-                                content: setupAlertDialoadContainer(),
-                              ))).whenComplete(() => dictword.clear())
-                      : SizedBox();
+                  print("here is your dict word" + dictword.toString());
+                  setState(() {
+                    isselectready
+                        ? showDialog(
+                            context: context,
+                            builder: ((context) => AlertDialog(
+                                  title: Text("Meaning of ${keyword}"),
+                                  content: setupAlertDialoadContainer(),
+                                ))).whenComplete(() => dictword.clear())
+                        : SizedBox();
+                  });
                 })
-            : Container());
+            : Container()
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     _pdfViewerController.zoomLevel = 1.5;
+        //   },
+        //   child: Icon(Icons.read_more),
+        // ),
+        //     : Container(),
+        );
   }
 }
 
 Widget setupAlertDialoadContainer() {
   return SizedBox(
-
-    
     height: 130.0, // Change as per your requirement
     width: 300.0, // Change as per your requirement
     child: ListView.builder(
@@ -123,6 +173,7 @@ Widget setupAlertDialoadContainer() {
       itemCount: dictword.length,
       itemBuilder: (BuildContext context, int index) {
         var article = dictword[index];
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +211,8 @@ Future getdata() async {
       // print(element['meanings'][0]['definitions']);
     }
     dictword = words;
-    return jsonbody;
+
+    return dictword;
   } else {
     print("Data is not perfect");
   }
