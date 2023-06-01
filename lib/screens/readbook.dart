@@ -158,6 +158,8 @@ class _ReadbookState extends State<Readbook> {
                                         builder: ((context) => PDFreader(
                                               pdfurl: widget.pdfurl,
                                               booktitle: widget.bookname,
+                                              imagurl: widget.imageurl,
+                                            price: widget.price,
                                             ))));
                               },
                               style: ButtonStyle(

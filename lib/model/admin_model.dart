@@ -68,6 +68,7 @@ class Authentication {
     required this.refreshtoken,
   });
 }
+
 class DictWord {
   String meaning;
   String partofspeech;
@@ -76,5 +77,26 @@ class DictWord {
     required this.meaning,
     required this.partofspeech,
     required this.example,
+  });
+}
+
+class ContinueReading {
+  var id;
+  String book;
+  String price;
+  String author;
+  bool favclick;
+  String imagelink;
+  String pdfurl;
+  var pageno;
+  ContinueReading({
+    required this.id,
+    required this.book,
+    required this.price,
+    required this.author,
+    required this.favclick,
+    required this.imagelink,
+    required this.pdfurl,
+    required this.pageno,
   });
 }
