@@ -82,6 +82,7 @@ class _DisplayDataState extends State<DisplayData>
                   ),
                   const SizedBox(width: 30),
                   Expanded(
+                    flex: 2,
                     child: ListView.builder(
                       itemCount: _iteam.length,
                       scrollDirection: Axis.horizontal,
@@ -167,8 +168,7 @@ class _DisplayDataState extends State<DisplayData>
 
                                           setState(() {});
                                         },
-                                        icon: NeumorphicIcon(
-                                            CupertinoIcons.cart,
+                                        icon: NeumorphicIcon(Icons.download,
                                             style: const NeumorphicStyle(
                                                 shadowDarkColor: Colors.black,
                                                 color: Colors.black))),
@@ -228,8 +228,11 @@ class _DisplayDataState extends State<DisplayData>
                                           GestureDetector(
                                             onTap: () {
                                               PDFreader(
-                                                  pdfurl: article.pdfurl,
-                                                  booktitle: article.book);
+                                                pdfurl: article.pdfurl,
+                                                booktitle: article.book,
+                                                imagurl: article.imagelink,
+                                                price: article.price,
+                                              );
                                             },
                                             child: TwoSideRoundedButton(
                                               text: "Read",
@@ -258,10 +261,10 @@ class _DisplayDataState extends State<DisplayData>
                                 style: Theme.of(context).textTheme.bodyText2,
                                 children: const [
                                   TextSpan(
-                                      text: "Best of the ",
+                                      text: "Continue ",
                                       style: TextStyle(fontSize: 30.0)),
                                   TextSpan(
-                                    text: "day",
+                                    text: "Reading",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 30.0),
@@ -270,88 +273,12 @@ class _DisplayDataState extends State<DisplayData>
                               ),
                             ),
                           ])),
-                  SizedBox(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height / 3,
-                      child: Stack(children: [
-                        Positioned(
-                          child: Container(
-                            height: 185,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFEAEAEA).withOpacity(.45),
-                              borderRadius: BorderRadius.circular(29),
-                            ),
-                            child: Stack(children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 10.0, bottom: 10.0, left: 15.0),
-                                    child: const Text(
-                                      "New York Time Best For 11th March 2020",
-                                      style: TextStyle(
-                                        fontSize: 11.0,
-                                        color: kLightBlackColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Normal People \n & Sally People",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Gary Venchuk",
-                                      style: TextStyle(
-                                          color: kLightBlackColor,
-                                          fontSize: 15.0),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10.0),
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 10.0),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                right: 0,
-                                top: 2,
-                                child: Image.network(
-                                  "https://www.realsimple.com/thmb/-peF-thNTibpA5iArNXU693CTn8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/great-books-to-read-normal-people-crop-0649ede28a2144808e96aed6a1600aed.jpg",
-                                  width: size.width * .335,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: SizedBox(
-                                  height: 40,
-                                  width: size.width * .3,
-                                  child: TwoSideRoundedButton(
-                                    text: "Read",
-                                    radious: 24,
-                                  ),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ]))
+                  Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                      ))
                 ]);
           } else if (snapshot.hasError) {
             return const Center(child: Text("Network issue"));
@@ -379,6 +306,31 @@ class _DisplayDataState extends State<DisplayData>
         },
       ),
     ));
+  }
+
+  // ! #-----------------------Fetching Continue Reading Data-----------------#
+  Future continuereadingdata() async {
+    var client = http.Client();
+    var response = await client.get(Uri.parse(
+        "https://instagram-ee2d1-default-rtdb.firebaseio.com/$localuid/ContinueReading.json"));
+    if (response.statusCode == 200) {
+      List<ContinueReading> continuereading = [];
+      var extractdata = jsonDecode(response.body) as Map<String, dynamic>;
+      extractdata.forEach((key, value) {
+        var spefics = value as Map<String, dynamic>;
+        spefics.forEach((key, value) {
+          continuereading.add(ContinueReading(
+              id: key,
+              book: value["Book"],
+              price: value['Price'],
+              author: value['Author'],
+              favclick: value['favdata'],
+              imagelink: value['imagelink'],
+              pdfurl: value['pdfUrl'],
+              pageno: value['resumepageno']));
+        });
+      });
+    }
   }
 
 // ! #-----------------Fetching Data from API RealTime database--------------#
