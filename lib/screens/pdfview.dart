@@ -59,6 +59,7 @@ class _PDFreaderState extends State<PDFreader> {
   late SharedPreferences sharedPreferences;
   bool isready = false;
   var startpage, endpage;
+  var translatingtext;
   bool isselectready = false;
   bool readingmode = false;
   PdfViewerController _pdfViewerController = PdfViewerController();
@@ -165,14 +166,120 @@ class _PDFreaderState extends State<PDFreader> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
+                    padding: const EdgeInsets.only(left: 23.0),
                     child: FloatingActionButton(
                         onPressed: () {
                           //translateText(keyword.toString(), 'hi');
-                       translator.translate("I love Brazil!", from: 'en', to: 'pt').then((s) {
-    print(s);
-  });
-                          setState(() {});
+                          translator
+                              .translate(keyword.toString(),
+                                  from: 'en', to: 'hi')
+                              .then((s) {
+                            setState(() {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "Translating Text",
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    content: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Container(
+                                              height: 30.0,
+                                              width: 80.0,
+                                              decoration: BoxDecoration(
+                                                // color: Color.fromARGB(255, 37, 37, 37),
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        255, 37, 37, 37),
+                                                    width: 1.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              child: Center(
+                                                child: Text("English"),
+                                              ),
+                                            ),
+                                            Text("to"),
+                                            Container(
+                                              height: 30.0,
+                                              width: 80.0,
+                                              decoration: BoxDecoration(
+                                                // color: Color.fromARGB(255, 37, 37, 37),
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        255, 37, 37, 37),
+                                                    width: 1.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              child: Center(
+                                                child: Text("Hindi"),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20.0,
+                                        ),
+                                        Container(
+                                          // height: 200.0,
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(top: 15.0),
+                                          decoration: BoxDecoration(
+                                              // color: Color.fromARGB(255, 37, 37, 37),
+                                              border: Border.all(
+                                                  color: Color.fromARGB(
+                                                      255, 37, 37, 37),
+                                                  width: 1.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0)),
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                s.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20.0,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    actions: [
+                                      Center(
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 37, 37, 37),
+                                            ),
+                                            onPressed: () {},
+                                            child: Text(
+                                              "Close",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500),
+                                            )),
+                                      )
+                                    ],
+                                  );
+                                },
+                              ).whenComplete(() => translatingtext = "");
+                            });
+                          });
                         },
                         backgroundColor: const Color.fromARGB(255, 37, 37, 37),
                         child: Icon(Icons.translate)),
@@ -324,5 +431,3 @@ Future continuegetdata() async {
     throw Exception('Failed to load data');
   }
 }
-
-
