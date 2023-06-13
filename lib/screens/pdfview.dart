@@ -59,9 +59,10 @@ class _PDFreaderState extends State<PDFreader> {
   late SharedPreferences sharedPreferences;
   bool isready = false;
   var startpage, endpage;
-  var translatingtext;
+  var translatingtext, parapharasedata;
   bool isselectready = false;
   bool readingmode = false;
+  bool pharaprase = false;
   PdfViewerController _pdfViewerController = PdfViewerController();
   GoogleTranslator translator = GoogleTranslator();
 
@@ -331,7 +332,42 @@ class _PDFreaderState extends State<PDFreader> {
                     width: 10.0,
                   ),
                   FloatingActionButton(
-                      onPressed: () {},
+                      //! Pharaprase API code and FlatButton is here------------------>
+                      onPressed: () async {
+                        var apiKey = "p5twx8IKEkstVdKt7b7Lv3vl7sgB9TmG";
+                        final url = 'https://api.ai21.com/studio/v1/paraphrase';
+                        String cleanedText =
+                            keyword!.replaceAll(RegExp(r'\s+'), ' ');
+                        print("${keyword}");
+                        final response = await http.post(
+                          Uri.parse(url),
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer $apiKey',
+                          },
+                          body: '{"text": "${cleanedText}"}',
+                        );
+
+                        if (response.statusCode == 200) {
+                          var paraphrasedText =
+                              jsonDecode(response.body) as Map<String, dynamic>;
+                          paraphrasedText.forEach((key, value) {
+                            parapharasedata = value[2].toString();
+                            setState(() {
+                              pharaprase = true;
+                            });
+                          });
+                        } else {
+                          throw Exception(
+                              'Failed to paraphrase text. Status code: ${response.statusCode}');
+                        }
+                        // pharaprase
+                        //     ? showDialog(
+                        //         context: context,
+                        //         builder: (BuildContext context) {},
+                        //       )
+                        //     : SizedBox();
+                      },
                       backgroundColor: const Color.fromARGB(255, 37, 37, 37),
                       child: Image.asset(
                         'assets/chatgpt.png',
@@ -342,6 +378,7 @@ class _PDFreaderState extends State<PDFreader> {
                 ],
               )
             : Container()
+
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {
         //     _pdfViewerController.zoomLevel = 1.5;
@@ -431,3 +468,5 @@ Future continuegetdata() async {
     throw Exception('Failed to load data');
   }
 }
+//! AI tool for to pharapharase the text Note:- (Only 10 request per Month)----------
+
